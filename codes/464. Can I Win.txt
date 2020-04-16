@@ -1,0 +1,32 @@
+class Solution {
+public:
+    
+    bool dfs(vector<int>& dp , int k, int x , int t){
+        if(dp[k]!=0){
+            if(dp[k]==1) return true;
+            else return false;
+        }
+        if(t<=0) return false;
+        bool f = false;
+        for(int j=0;j<x;j++){
+            if((k&(1<<j))==0 && dfs(dp, (k|(1<<j)) ,x , t-j-1)==false){
+                f = true;
+                break;
+            }
+           
+            
+        }
+        if(f) dp[k] = 1;
+        else dp[k] = -1;
+        return f;
+    }
+    
+    bool canIWin(int x, int t) {
+        int val = (x*(x+1))/2;
+        if(t<2) return true;
+        if(t>val) return false;
+        vector<int> dp(1 << x , 0);
+        return dfs(dp , 0, x , t);
+        
+    }
+};

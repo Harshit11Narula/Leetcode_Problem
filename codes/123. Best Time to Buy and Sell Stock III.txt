@@ -1,0 +1,29 @@
+class Solution {
+public:
+    int maxProfit(vector<int>& arr) {
+        if(arr.size()==0) return 0;
+        int dp[arr.size()] = {0};
+        int n = arr.size();
+        int minval = arr[0];
+        int index[arr.size()];
+        int ans = 0;
+        for(int j=1;j<n;j++){
+            dp[j] = arr[j] - minval;
+            dp[j] = max(dp[j]  , dp[j-1]);
+            minval = min(minval , arr[j]);
+            ans = max(ans , dp[j]);
+        }
+        int dp2[arr.size()] = {0};
+        int maxval = arr[arr.size()-1];
+        for(int j=arr.size()-2;j>=0;j--){
+            dp2[j] =maxval - arr[j];
+            dp2[j] = max(dp2[j] , dp2[j+1]);
+            maxval = max(maxval , arr[j]);
+            ans = max(ans , dp2[j]);
+        }
+        for(int j=0;j<n-1;j++){
+            ans = max(ans , dp[j] + dp2[j+1]);
+        }
+        return ans;
+    }
+};

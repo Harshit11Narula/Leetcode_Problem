@@ -1,0 +1,40 @@
+class Solution {
+public:
+    vector<int> dp[1000];
+    vector<string> ans;
+    string arr[1000][1000];
+    void dfs(string q , int curidx , string& s){
+        if(curidx == 0){
+            ans.push_back(q);
+            return;
+        }
+        for(int j=0;j<dp[curidx].size();j++){
+            dfs(arr[dp[curidx][j]+1][curidx] + " " + q , dp[curidx][j] , s);
+        }
+    }    
+    vector<string> wordBreak(string s, vector<string>& wordDict) {
+        unordered_map<string, int> mp;
+        for(int j=0;j<wordDict.size();j++) mp[wordDict[j]] = 1;
+       
+        dp[0].push_back(-1);
+        for(int j=1;j<=s.length();j++){
+            string r = "";
+            for(int i=j;i>=1;i--){
+                r = s.at(i-1)+r;
+                arr[i][j] = r;
+                
+                if(mp.find(r)!=mp.end()){
+                    if(dp[i-1].size()!=0)
+                        dp[j].push_back(i-1);
+                }
+            }
+          
+        }
+        int curidx = s.length();
+      
+       for(int j=0;j<dp[curidx].size();j++){
+            dfs(arr[dp[curidx][j]+1][curidx] , dp[curidx][j] , s);
+        }
+        return ans;
+    }
+};

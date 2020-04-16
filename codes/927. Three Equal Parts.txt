@@ -1,0 +1,149 @@
+class Solution {
+public:
+    
+    bool verify(int i , int j , vector<int>& arr){
+        cout<<i<<" "<<j<<"\n";
+        int s1 = 0 , s2 = i+ 1 , s3 = j;
+        for(int k=0;k<arr.size();k++){
+            if(arr[k]==1){
+                s1 = k;
+                break;
+            }
+        }
+        for(int k=i+1;k<arr.size();k++){
+            if(arr[k]==1){
+                s2 = k;
+                break;
+            }
+        }
+        for(int k=j;k<arr.size();k++){
+            if(arr[k]==1){
+                s3 = k;
+                break;
+            }
+        }
+        int len = i - s1 + 1;
+        if(len != (j - s2)) return false;
+        if(len != (arr.size() - s3)) return false;
+        for(int k=0;k<len;k++){
+            if(arr[s1]!=arr[s2] || arr[s2]!=arr[s3]) return false;
+            s1++;
+            s2++;
+            s3++;
+  
+        }
+        return true;       
+    }
+    
+    
+    
+    vector<int> fun(int zerofirst , vector<int>& arr ,int st , int en){
+        cout<<st<<" "<<en<<"\n";
+            int zerosecond = 0;
+            bool flag = false;
+            for(int j=st+1;j<en;j++){
+                if(arr[j]==1){
+                flag = true;
+                }else{
+                  if(flag)
+                    zerosecond++;
+                }
+                
+            }
+            if(zerosecond==zerofirst){
+                if(verify(st , en , arr))
+                    return vector<int>{st , en};
+                else
+                    return vector<int>{-1 , -1};
+            }
+            
+            if(zerosecond < zerofirst){
+                return vector<int>{-1 , -1};
+            }
+            
+            for(int j = en - 1;j>st;j--){
+                if(arr[j]==1)
+                    return vector<int>{-1 , -1};
+                
+                zerosecond--;
+                if(zerosecond==zerofirst){
+                    if(verify(st , j , arr))
+                        return vector<int>{st ,j};
+                    else
+                        return vector<int>{-1 , -1};
+                }
+            }
+        return vector<int> {-1 , -1};
+    }
+    
+    
+    vector<int> threeEqualParts(vector<int>& arr) {
+        int cnt = 0;
+        for(int j=0;j<arr.size();j++)
+            if(arr[j]==1) cnt++;
+
+        if(cnt==0) return vector<int> {0 , (int)arr.size()-1};
+        
+        if(cnt%3!=0) return vector<int>{-1 , -1};
+        int each = cnt / 3;
+        
+        int st = 0;
+        int q = 0;
+        for(int j=0;j<arr.size();j++){
+            if(arr[j]==1) q++;
+            if(q==each){
+                st = j;
+                break;
+            }
+        }
+        int en = 0;
+        q = 0;
+        for(int j = arr.size()-1;j>=0;j--){
+            if(arr[j]==1) q++;
+            if(q==each){
+                en = j;
+                break;
+            }
+        }
+        int zerofirst = 0 , zerolast = 0;
+        bool flag = false;
+        
+        for(int j=0;j<=st;j++){
+            if(arr[j]==1){
+                flag = true;
+                cout<<"1 ";
+            }else{
+                if(flag)
+                    zerofirst++, cout<<"0 ";
+            }
+        }
+        flag = false;
+        cout<<"\n";
+        for(int j = en;j<arr.size();j++){
+            if(arr[j]==1){
+                flag = true;
+                cout<<"1 ";
+            }else{
+                if(flag)
+                    zerolast++, cout<<"0 ";
+            }
+            
+        }
+        cout<<zerolast<<" "<<zerofirst<<"\n";
+        if(zerolast==zerofirst){
+            return fun(zerofirst , arr , st , en);
+        }else{
+            if(zerolast < zerofirst) 
+                return vector<int> {-1 , -1};
+            for(int j=st+1;j<en;j++){
+                if(arr[j]==1)
+                    return vector<int> {-1 , -1};
+                
+                zerofirst++;
+                if(zerofirst==zerolast)
+                    return fun(zerofirst ,arr , j , en);
+            }
+        } 
+        return vector<int> {-1 , -1};
+    }
+};

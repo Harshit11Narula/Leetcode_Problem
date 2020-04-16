@@ -1,0 +1,60 @@
+class Solution {
+public:
+    vector<int> smallestRange(vector<vector<int>>& nums) {
+        int const cnt = 1e5;
+        int const maxn = 2e5+1;
+        int n = nums.size();
+        vector<int>  temp[maxn];
+        for(int j=0;j<nums.size();j++){
+            for(int i=0;i<nums[j].size();i++)
+                temp[nums[j][i]+cnt].push_back(j+1);
+        }
+        int st = 0 , en = -1;
+        int sz = 0;
+        map<int, int> mp;
+        while(++en<maxn && temp[en].size()==0) ;
+                if(en<maxn)
+                for(int k=0;k<temp[en].size();k++){
+                    mp[temp[en][k]]++;
+                    if(mp[temp[en][k]]==1) 
+                        sz++;
+                }
+        st = en;
+        int anst = -1e5 , anen = 1e5; 
+        
+        while(en < maxn && st<maxn){
+           // cout<<st<<" "<<en<<" "<<sz<<"\n";
+            if(sz == n){
+                if(anen - anst > en - st){
+                    anst = st;
+                    anen = en;
+                }
+            }
+            
+            if(sz < n){
+                while(++en<maxn && temp[en].size()==0) ;
+                
+                if(en<maxn)
+                for(int k=0;k<temp[en].size();k++){
+                    mp[temp[en][k]]++;
+                    if(mp[temp[en][k]]==1) 
+                        sz++;
+                }
+            }else{
+                while(st<maxn && temp[st].size()==0) st++;
+                for(int k=0;k<temp[st].size();k++){
+                    mp[temp[st][k]]--;
+                    if(mp[temp[st][k]]==0) 
+                        sz--;
+                }
+                st++;
+                while(st < maxn && temp[st].size()==0) st++;
+            }
+        }
+        
+        return vector<int> {anst-cnt , anen-cnt};
+        
+        
+    }
+};
+

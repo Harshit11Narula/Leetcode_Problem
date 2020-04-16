@@ -1,0 +1,45 @@
+class Solution {
+public:
+    long long int id = 0;
+    string s;
+    long long int fun(){
+        long long int ans = 0;
+        long long int pos = 1;
+         while(id < s.length()){
+           //  cout<<id<<" " <<ans<<" "<<s.at(id)<<"\n";
+            if(id<s.length() && s.at(id)==')'){id++; return ans;}
+            if(id<s.length() && s.at(id)=='(') {id++;ans+= pos*(fun()) , pos = 1;}
+            if(id<s.length() && s.at(id)=='-') ++id , pos = -1;
+            if(id<s.length() && s.at(id)=='+') ++id , pos = 1;
+            if(id<s.length() && s.at(id)>='0' && s.at(id)<='9'){
+                long long int temp = 0;
+                while(id<s.length() && s.at(id)>='0' && s.at(id)<='9') temp = 10*temp + s.at(id) - '0' , id++;
+                ans+= pos*temp;
+                pos = 1;
+            }
+            while(id < s.length() && s.at(id)==' ') id++;
+        }
+        return ans;
+        
+    }
+    long long int calculate(string x) {
+        long long int ans = 0;
+        long long int pos = 1;
+        s  = x;
+        while(id < s.length()){
+            
+           //  cout<<id<<" " <<ans<<"\n";
+            if(id<s.length() && s.at(id)=='(') id++,ans+= pos*(fun()) , pos = 1;
+            if(id<s.length() && s.at(id)=='-') ++id , pos = -1;
+            if(id<s.length() && s.at(id)=='+') ++id , pos = 1;
+            if(id<s.length() && s.at(id)>='0' && s.at(id)<='9'){
+                long long int temp = 0;
+                while(id<s.length() && s.at(id)>='0' && s.at(id)<='9') temp = 10*temp + s.at(id) - '0' , id++;
+                ans+= pos*temp;
+                pos = 1;
+            }
+            while(id < s.length() && s.at(id)==' ') id++;
+        }
+        return ans;
+    }
+};

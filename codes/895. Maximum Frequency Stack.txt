@@ -1,0 +1,31 @@
+class FreqStack {
+public:
+    
+    FreqStack() {
+        
+    }
+    
+    unordered_map<int, int> counts_;
+    vector<vector<int>> data_;
+    void push(int x) {
+        int count = counts_[x]++;
+        if (count >= data_.size()) data_.push_back({x});
+        else data_[count].push_back(x);            
+    }
+    
+    int pop() {
+        auto& vec = data_.back();
+        int value = vec.back();
+        counts_[value]--;
+        if (vec.size() == 1) data_.pop_back();
+        else vec.pop_back();        
+        return value;
+    }
+};
+static auto fastIo = []() {std::ios::sync_with_stdio(false); cin.tie(nullptr); std::cout.tie(nullptr); return 0; }();
+/**
+ * Your FreqStack object will be instantiated and called as such:
+ * FreqStack* obj = new FreqStack();
+ * obj->push(x);
+ * int param_2 = obj->pop();
+ */

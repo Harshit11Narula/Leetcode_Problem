@@ -1,0 +1,52 @@
+class Solution {
+public:
+    long long int GCD(long long int x , long long int y){
+        if(x==0 || y==0) return 1;
+        while(y){
+            int temp = y;
+            y = x%y;
+            x = temp;
+        }
+        return x;
+    }
+    
+    
+    int maxPoints(vector<vector<int>>& arr) {
+        if(arr.size()==0) return 0;
+       
+      
+        long long int ans = 0;
+        for(int j=0;j<arr.size();j++){
+             long long int point_x_axis = 0;
+             unordered_map<double , long long int > mp;
+             long long int val1 = 1; 
+            
+            for(int i=0;i<arr.size();i++){
+                if(j==i) continue;
+                
+                int x1 = arr[j][0] , y1 = arr[j][1];
+                int x2 = arr[i][0] , y2 = arr[i][1];
+                if(x1==x2 && y1==y2){
+                    val1++;
+                    continue;
+                }
+                
+                long long int x = x2 - x1;
+                long long int y = y2 - y1;
+                long long int gcd = GCD(abs(x) , abs(y));
+                x/=gcd;
+                y/=gcd;
+                if(x==0){
+                     point_x_axis++;
+                    ans = max(ans ,   point_x_axis + val1);
+                }else{
+                    double qw = (double)x / (double) y;
+                    mp[qw]++;
+                    ans = max(ans , mp[qw]+val1);
+                }
+            }
+            ans = max(ans , val1);
+        }
+        return ans;
+    }
+};

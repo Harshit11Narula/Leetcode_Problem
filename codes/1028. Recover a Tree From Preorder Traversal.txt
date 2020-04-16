@@ -1,0 +1,35 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+     int id = 0;
+    TreeNode* fun(string s , int depth){
+       if(id==s.length()) return NULL;
+        int c = 0 , id2 = id;
+        while(s.at(id2)=='-') c++ , id2++;
+        if(c <= depth) return NULL;
+        int num = 0;
+        while(id2<s.length() && s.at(id2)!='-') num = num*10 + s.at(id2)-'0' , id2++;
+        id2--;
+        
+         TreeNode* temp = new TreeNode(num);
+      //  cout<<s.at(id2)-'0'<<" "<<c<<"\n";
+        id = id2+1;
+        
+        temp->left = fun(s , c);
+        temp->right = fun(s , c);
+        return temp;
+    }
+    
+    
+    TreeNode* recoverFromPreorder(string S) {
+        return fun(S , -1);
+    }
+};

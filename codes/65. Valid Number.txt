@@ -1,0 +1,70 @@
+class Solution {
+public:
+    bool isNumber(string s) {
+        if(s.length()==0) return true;
+       
+        bool f1 = false , f2 = false , f3 = false;
+        int j =0;
+        while(j<s.length() && s.at(j)==' ') j++;
+        if(s.length()==j) return false;
+         if(s.at(j)=='.'){
+             f2 = true;
+             j++;
+             if(j==s.length()) return false;
+              if(j<s.length() && s.at(j)==' ') return false;
+             f3 = true;
+         } 
+        if( s.at(j)=='e') return false;
+        if((s.at(j)=='+' || s.at(j)=='-')){
+            if(f3)
+                return false;
+            else 
+                j++;
+        }
+        
+        if( s.at(j)=='e') return false;
+        int it = 0;
+        while(j<s.length()){
+            int c = 0;
+             while(j+c<s.length() && s.at(j+c)==' ') c++;
+                if(j+c==s.length()) break;
+            if(c!=0) return false;
+            if(s.at(j)=='+' || s.at(j)=='-') return false;
+            if(s.at(j)=='e') {
+                if(f1)
+                    return false;
+                f1 = true;
+                j++;
+                if(j<s.length() && s.at(j)==' ') return false;
+                 if(j==s.length()) return false;
+                if(s.at(j)=='+' || s.at(j)=='-') j++;
+                if(j==s.length()) return false;
+                continue;
+            }
+            
+            if(s.at(j)=='.'){
+                if(f2) 
+                    return false;
+                if(f1) 
+                    return false;
+                f2 = true;
+                j++;
+                  int c = 0;
+                 while(j+c<s.length() && s.at(j+c)==' ') c++;
+                 if(j+c==s.length()){
+                   if(it==0)
+                       return false;
+                     else
+                         break;
+                 } 
+                 if(c!=0) return false;
+                continue;
+            }
+            if(s.at(j)>='0' && s.at(j)<='9')
+                j++ , it++;
+            else
+                return false;
+        }
+        return true;
+    }
+};

@@ -1,0 +1,54 @@
+#include <ext/pb_ds/assoc_container.hpp> 
+#include <ext/pb_ds/tree_policy.hpp> 
+using namespace __gnu_pbds; 
+#define ordered_set tree< pair<long long int, int>, null_type,less<  pair<long long int, int>>, rb_tree_tag
+    ,tree_order_statistics_node_update>
+class RandomizedCollection {
+public:
+    ordered_set arr;
+    /** Initialize your data structure here. */
+    unordered_map<int , int> mp;
+    RandomizedCollection() {
+        
+    }
+    
+    /** Inserts a value to the collection. Returns true if the collection did not already contain the specified element. */
+    bool insert(int val) {
+        if(mp[val]==0){
+            mp[val]++;
+            return true;
+        }
+        mp[val]++; 
+        return false;
+    }
+    
+    /** Removes a value from the collection. Returns true if the collection contained the specified element. */
+    bool remove(int val) {
+        if(mp[val]==0) return false;
+        mp[val]--;
+        return true;
+    }
+    
+    /** Get a random element from the collection. */
+    int getRandom() {
+        unordered_map<int , int>::iterator i;
+        vector<int> temp;
+        int fre = 0;
+        int maxval = -1;
+        for(i=mp.begin();i!=mp.end();i++){
+           for(int j=0;j<(*i).second;j++)
+                temp.push_back((*i).first);
+            
+        }
+      //  mp[maxval]--;
+        return temp[rand()%temp.size()];
+    }
+};
+
+/**
+ * Your RandomizedCollection object will be instantiated and called as such:
+ * RandomizedCollection* obj = new RandomizedCollection();
+ * bool param_1 = obj->insert(val);
+ * bool param_2 = obj->remove(val);
+ * int param_3 = obj->getRandom();
+ */

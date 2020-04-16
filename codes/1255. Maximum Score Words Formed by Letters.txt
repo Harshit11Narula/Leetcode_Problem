@@ -1,0 +1,40 @@
+class Solution {
+public:
+    int pow(int r , int n){
+        int ans = 1;
+        for(int j=1;j<=n;j++) ans*=r;
+        return ans;
+    }
+    
+    int maxScoreWords(vector<string>& words, vector<char>& letters, vector<int>& score) {
+        int n = words.size();
+        int cnt = pow(2 , n) ;
+        int al[26] = {0};
+        int ans = 0;
+        for(int j=0;j<letters.size();j++) al[letters.at(j)-'a']++;
+        for(int j=0;j<cnt;j++){
+            int val = 0;
+            int temp[26] = {0};
+            bool flag = false;
+            for(int i=0;i<n;i++){
+                if(j&(1<<i)){
+                    for(int k=0;k<words[i].length();k++){
+                    int id = words[i].at(k)-'a';
+                       temp[id]++;
+                       val+=score[id];
+                       if(temp[id]>al[id]){
+                           flag = true;
+                           val = 0;
+                           break;
+                       }
+                    }
+                }
+                if(flag) break;
+            }
+            ans = max(ans , val);
+            
+            
+        }
+       return ans;
+    }
+};

@@ -1,0 +1,28 @@
+class Solution {
+public:
+    int firstMissingPositive(vector<int>& nums) {
+        int last = nums.size()-1;
+        int n = nums.size();
+        for(int j=0;j<=last;j++){
+            if(nums[j]<=0 || nums[j] > n){
+                swap(nums[j] , nums[last]);
+                last--;
+                j--;
+            }
+        }
+        n++;
+        for(int j=0;j<=last;j++){
+            int val = nums[j]%(n);
+            if(val-1 > last) continue;
+            nums[val-1] += n;
+        }
+        int ans = last+2;
+        for(int j=0;j<=last;j++){
+            if(nums[j]<n){
+                ans = j+1;
+                break;
+            }
+        }
+        return ans;    
+    }
+};

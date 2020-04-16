@@ -1,0 +1,45 @@
+class Solution {
+public:
+    int fun(int id , vector<int>&dp , vector<int>&suf, vector<int>&arr){
+        if(id==dp.size()) return 0;
+        if(dp[id]!=0) return dp[id];
+        int maxa = INT_MIN;
+        int sum = 0;
+        for(int j=0;id+j<dp.size() && j<3;j++){
+            sum+=arr[id+j];
+             maxa = max(sum + suf[id+1+j] - fun(id+1+j , dp , suf, arr) , maxa);
+          
+        }
+        dp[id] = maxa;
+        return maxa;
+    }
+    
+    
+    
+    string stoneGameIII(vector<int>& arr) {
+        int n = arr.size();
+        if(n==0) return "Tie";
+        vector<int> dp(n , 0);
+        vector<int> suf(n+1 , 0);
+        suf[n-1] = arr[n-1];
+        for(int j=n-2;j>=0;j--){
+            suf[j] = suf[j+1] + arr[j];
+        }
+        
+        int maxa = fun(0 , dp , suf , arr);
+        int maxb = suf[0] - maxa;
+        if(maxa==maxb){
+            return "Tie";
+        }
+        if(maxa > maxb){
+            return "Alice";
+        }
+        if(maxb > maxa){
+            return "Bob";
+        }
+        
+        return "Tie";
+        
+        
+    }
+};

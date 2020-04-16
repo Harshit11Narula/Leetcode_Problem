@@ -1,0 +1,20 @@
+class Solution {
+public:
+    bool isInterleave(string s1, string s2, string s3) {
+        if(s1.length() + s2.length()  != s3.length()) return false;
+        bool dp[s1.length()+1][s2.length()+1];
+        dp[0][0] = true;
+        for(int j=1;j<=s1.length();j++){
+            dp[j][0] = s1.substr(0 , j)==s3.substr(0 , j) ? true:false;
+        }
+        for(int j=1;j<=s2.length();j++)
+            dp[0][j] = s2.substr(0 , j) == s3.substr(0 , j) ? true : false;
+        
+        for(int j=1;j<=s1.length();j++){
+            for(int i=1;i<=s2.length();i++){
+                dp[j][i] = (dp[j-1][i] && s1.at(j-1)==s3.at(i+j-1)) || (dp[j][i-1] && s2.at(i-1)==s3.at(i+j-1));
+            }
+        }
+        return dp[s1.length()][s2.length()];
+    }
+};

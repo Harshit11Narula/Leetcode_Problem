@@ -1,0 +1,30 @@
+bool cmp(pair<int,int>& x , pair<int,int>& y){
+        if(x.first==y.first) return x.second < y.second;
+        return x.first < y.first;
+    }
+class Solution {
+public:
+    
+    
+    int maxEnvelopes(vector<vector<int>>& arr) {
+        if(arr.size()==0) return 0;
+        int n = arr.size();
+        vector<pair<int,int> > temp;
+        for(int j=0;j<n;j++){
+            temp.push_back({arr[j][0] , arr[j][1]});
+        }
+        sort(temp.begin() , temp.end() , cmp);
+        int ans[n] = {0};
+        int val = 1;
+        for(int j=0;j<temp.size();j++){
+            ans[j] = 1;
+            for(int i=0;i<j;i++){
+                if(temp[j].first > temp[i].first && temp[j].second > temp[i].second)
+                    ans[j] = max(ans[j] , ans[i] + 1);
+               
+            }
+        }
+        for(int j=0;j<n;j++) val = max(val , ans[j]);
+        return val;
+    }
+};

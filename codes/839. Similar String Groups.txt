@@ -1,0 +1,79 @@
+class Solution {
+public:
+    
+    int find(int x , int par[]){
+        if(x!=par[x]) return find(par[x] , par);
+        return x;
+    }
+    void unionpar(int x , int y , int rank[] , int ds[]){
+        if(rank[x] == rank[y]){
+            ds[x] = y;
+            rank[y]++;
+            return;
+        }
+        if(rank[x] > rank[y]){
+            ds[y] = x;
+        }else{
+            ds[x] = y;
+        }
+    }
+    
+    bool check(string x , string y){
+        if(x.length()!=y.length()) return false;
+        int n = x.length();
+        int cnt = 0;
+        int temp1= 0 , temp2=0;
+        for(int j=0;j<n;j++)
+            if(x.at(j)!=y.at(j))
+                cnt++ , temp1 += x.at(j) , temp2 += y.at(j);
+        if(cnt==2 && temp1==temp2) return true;
+        return false;
+    }
+    
+    int numSimilarGroups(vector<string>& words) {
+        
+        
+        vector<string> arr;
+        
+        map<string , int> s;
+        for(int j=0;j<words.size();j++){
+            if(s.find(words[j])!=s.end()) continue;
+            arr.push_back(words[j]);
+            s[words[j]] = 1;
+        }
+        
+        
+        int n = arr.size();
+        int hash[n] = {0};
+        int ds[n];
+        int rank[n];
+        for(int j=0;j<arr.size();j++)
+        {
+            ds[j] = j;
+            rank[j] = 1;
+            for(int i=0;i<arr[j].length();i++){
+                hash[j]  += arr[j].at(i);
+            }
+        }
+        int used[n] = {0};
+        for(int j=0;j<n;j++){
+            for(int k=j+1;k<n;k++){
+                if(hash[j]!=hash[k]) continue;
+                if(check(arr[j]  , arr[k])){
+                    int parj = find(j , ds);
+                    int park  = find(k , ds);
+                    if(park==parj) continue;
+                    unionpar(park , parj , rank ,ds);
+                    //cout<<j<<" "<<k<<"\n";
+                    }
+            }
+        }
+        int ans = 0;
+        for(int j=0;j<n;j++){
+            used[find(ds[j] , ds)] = 1;
+        }
+        for(int j=0;j<n;j++) if(used[j]==1) ans++;
+        return ans;
+        
+    }
+};

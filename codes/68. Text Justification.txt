@@ -1,0 +1,73 @@
+class Solution {
+public:
+    vector<string> fullJustify(vector<string>& words, int maxWidth) {
+        vector<string> ans;
+        int d = maxWidth;
+        int st = 0 , en = 0 , minus  = 0;
+        for(int j=0;j<words.size();j++){
+            if(d >= words[j].length()){
+                d-= words[j].length();
+                if(d!=0) d--;
+                else minus=1;
+                en = j;
+            }else{
+                if(minus==0) d++;
+                minus = 0;
+                
+                int cnt = en - st;
+                if(cnt==0){
+                     string s = "";
+                    for(int k=0;k<words[st].length();k++) s+=words[st][k];
+                    for(int k=0;k<d;k++) s+=" ";
+                     ans.push_back(s);
+                     d = maxWidth;
+                    st = j;
+                    en = j;
+                    j--;
+                }else{
+                int atleast = d  / cnt;
+                int qw = d%cnt;
+                string s = "";
+                for(int i=st;i<en;i++){
+                    for(int k=0;k<words[i].length();k++) s+=words[i][k];
+                    for(int k=0;k<=atleast;k++) s+=" ";
+                    if(qw!=0){
+                        s+=" ";
+                        qw--;
+                    }
+                }
+                for(int k=0;k<words[en].length();k++) s+=words[en][k];
+                ans.push_back(s);
+                d = maxWidth;
+                st = j;
+                en = j;
+                j--;
+                }
+            }
+            
+        }
+        if(minus==0) d++;
+                
+        int cnt = en - st;
+                if(cnt==0){
+                     string s = "";
+                    for(int k=0;k<words[st].length();k++) s+=words[st][k];
+                    for(int k=0;k<d;k++) s+=" ";
+                     ans.push_back(s);
+                     
+                }else{
+                 string s = "";
+                for(int i=st;i<en;i++){
+                    for(int k=0;k<words[i].length();k++) s+=words[i][k];
+                    s+=" ";
+                }
+                for(int k=0;k<words[en].length();k++) s+=words[en][k];
+                for(int j=0;j<d;j++) s+=" ";
+                ans.push_back(s);
+                
+                }
+        return ans;
+        
+        
+    }
+};

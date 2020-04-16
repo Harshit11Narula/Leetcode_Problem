@@ -1,0 +1,20 @@
+class Solution {
+public:
+    int consecutiveNumbersSum(int n) {
+        if(n==1) return 1;
+       int ans= 0;
+        int val = 0;
+        int j;
+        for(j=1;val<n;j++){
+            val+=j;
+            if(j%2==0){
+                if(n%j==j/2) ans++ , cout<<j<<" ";
+            }else{
+                if(n%j==0) ans++, cout<<j<<" ";
+            }
+        }
+        //if(val==n) ans++;
+        return ans;
+        
+    }
+};

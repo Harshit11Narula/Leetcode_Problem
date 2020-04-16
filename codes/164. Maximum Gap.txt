@@ -1,0 +1,33 @@
+class Solution {
+public:
+    int maximumGap(vector<int>& nums) {
+     //   if(nums.size()<2) return 0;
+//         int maxele = INT_MIN;
+//         for(int j=0;j<nums.size();j++) maxele = max(maxele , nums[j]);
+//         int minval = INT_MAX;
+//         for(int j=0;j<nums.size();j++) minval = min(minval , nums[j]);
+//         int len = maxval - minval;
+//         int bucket_size = max(1 , len/nums.size());
+//         int bucket_number = len/bucket_size + 1;
+//         if(bucket_number <= 1) return len;
+        
+//         vector<int> bucket_min(bucket_number , INT_MAX);
+//         vector<int> bucket_max(bucket_number , INT_MIN);
+//         vector<int> bucket_count(bucket_number , 0);
+        
+//         for(int j=0;j<nums.size();j++){
+//             int bucket_id = (nums[i] - minval) / bucket_size;
+//             bucket_count[bucket_id]++;
+//             bucket_max[bucket_id] = max(bucket_max[bucket_id] , nums[i]);
+//             bucket_min[bucket_id] = max(bucket_min[bucket_id] , nums[i]);
+//         }
+        int size = nums.size();
+    if(size < 2) return 0;
+    if(size == 2) return abs(nums[1]-nums[0]);
+    int maxDiff = 0;
+    sort(nums.begin(), nums.end());
+    for(int i = 0; i < size-1; ++i)
+        maxDiff = max(maxDiff, nums[i+1]-nums[i]);
+    return maxDiff;
+    }
+};

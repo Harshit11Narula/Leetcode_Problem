@@ -1,0 +1,19 @@
+class Solution {
+public:
+   
+    
+    bool reachingPoints(int sx, int sy, int tx, int ty) {
+       
+        while(ty>sy && tx>sx){
+            if(tx>ty)
+                tx%=ty;
+            else
+                ty%=tx;
+        }
+        if(tx==sx && sy<=ty && (ty-sy)%sx==0) return true;
+        
+        if(tx>=sx && sy==ty && (tx-sx)%sy==0) return true;
+        
+        return false;
+    }
+};

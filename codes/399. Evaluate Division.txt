@@ -1,0 +1,49 @@
+class Solution {
+public:
+    vector<double> calcEquation(vector<vector<string>>& equations, vector<double>& values, vector<vector<string>>& queries) {
+        vector<double> result;
+        double connected=-1.0;    
+        for(int i=0;i<queries.size();i++){
+            vector<bool> visited(equations.size(),0);
+            connected=checkConnection(equations,values,queries[i][0],queries[i][1],visited);
+            result.push_back(connected);
+        }
+        return result;
+    }
+    
+    double checkConnection(vector<vector<string>>& equations,  vector<double>& values, string start, string end,vector<bool>& visited){
+        bool flag=false;
+        double cur=1.0;
+        for(int i=0;i<equations.size();i++){
+            if(visited[i]){continue;}
+            visited[i]=true;
+            if(equations[i][0]==start&&equations[i][1]==end){
+                return values[i];
+            }
+            else if(equations[i][1]==start&&equations[i][0]==end){
+                return 1.0/values[i];
+            }
+            else if(equations[i][0]==start&&equations[i][0]==end){
+                return 1.0;
+            }
+            else if(equations[i][1]==start&&equations[i][1]==end){
+                return 1.0;
+            }
+            else if(equations[i][0]==start){
+                cur=checkConnection(equations,values,equations[i][1],end,visited);
+                if(cur!=-1.0){
+                    return values[i]*cur;
+                }
+            }
+            else if(equations[i][1]==start){
+                cur=checkConnection(equations,values,equations[i][0],end,visited);
+                if(cur!=-1.0){
+                    return cur/values[i];
+                }
+            }
+            visited[i]=false;
+        }
+        return -1.0;
+    }
+    
+};

@@ -1,0 +1,34 @@
+class Solution {
+public:
+    
+int fun(string a , string b , int idx){
+   // cout<<a<<" "<<b<<" "<<idx<<"\n";
+    if(idx==a.length())
+        return 0;
+
+    if(a.at(idx)==b.at(idx))
+        return fun(a, b, idx+1);
+
+    int ans = INT_MAX;
+    for (int j = idx + 1; j < a.length();j++){
+        if(a.at(j)==b.at(idx) && a.at(idx)==b.at(j)){
+           swap(a.at(idx), a.at(j));
+            return 1+fun(a, b, idx + 1);
+        }
+    }
+    
+    
+    for (int j = idx + 1; j < a.length();j++){
+        if(a.at(j)==b.at(idx)){
+            swap(a.at(idx), a.at(j));
+            ans = min(ans, 1+fun(a, b, idx + 1));
+            swap(a.at(idx), a.at(j));
+        }
+    }
+        return ans;
+    }
+    int kSimilarity(string a, string b) {
+        return fun(a , b , 0);
+        
+    }
+};

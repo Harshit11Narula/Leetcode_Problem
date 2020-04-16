@@ -1,0 +1,80 @@
+ int const maxval = 100001;
+class Solution {
+public:
+   
+vector<int> rk;
+vector<int> par;
+vector<int> sum;
+
+int find(int x){
+    if(par[x]!=x)
+        par[x] = find(par[x]);
+    return par[x];
+}
+void union1(int x , int y){
+    int xroot = find(x);
+    int yroot = find(y);
+    if(rk[xroot] < rk[yroot]){
+        par[xroot] = yroot;
+        sum[yroot] += sum[xroot];
+    }else if(rk[xroot] > rk[yroot]){
+        par[yroot] = xroot;
+        sum[xroot] += sum[yroot];
+    }else{
+        par[yroot] = xroot;
+        sum[xroot] += sum[yroot];
+        rk[xroot]++;
+    }
+}
+
+
+
+int largestComponentSize(vector<int>& arr){
+    int qw = 0;
+    for(int j=0;j<arr.size();j++){
+        qw = max(qw , arr[j]);
+    }
+    qw++;
+     vector<int> present(qw , 0);
+    for(int j=0;j<arr.size();j++) present[arr[j]] = 1;
+    for(int j=0;j<qw;j++){
+        rk.push_back(0);
+        par.push_back(j);
+        sum.push_back(0);
+    }
+    
+    vector<int> fac[qw];
+    vector<int> isprime(qw, 0);
+    for (int j = 2; j < qw;j++){
+        par[j] = j;
+        if(isprime[j]==1)
+            continue;
+        for (int i = j; i < qw;i+=j){
+            if(present[i]==1)
+                fac[i].push_back(j);
+            isprime[i] = 1;
+        }
+    }
+
+    for (int j = 0; j < arr.size();j++){
+        int d = arr[j];
+        if(d==1)
+            continue;
+        for (int i = 0; i < fac[d].size();i++){
+            for (int k = i + 1; k < fac[d].size();k++){
+                int x1 = find(fac[d][i]) , x2 = find(fac[d][k]);
+                if(x1==x2)
+                    continue;
+                union1(x1, x2);
+            }
+        }
+        int x1 = find(fac[d][0]);
+        sum[x1]++;
+    }
+    int ans = 1;
+    for (int j = 2; j < qw; j++)
+        ans = max(ans, sum[j]);
+    return ans;
+}
+
+};

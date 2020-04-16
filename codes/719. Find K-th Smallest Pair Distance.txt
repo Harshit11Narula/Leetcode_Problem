@@ -1,0 +1,42 @@
+class Solution {
+public:
+    int smallestDistancePair(vector<int>& nums, int k5) {
+        cout<<nums.size()<<"\n";
+        sort(nums.begin() , nums.end());
+        map<int , int> mp;
+        vector<int> qw[10000];
+        int cnt = 0;
+        for(int j=0;j<nums.size();j++){
+            if(mp.find(nums[j])==mp.end()){
+                qw[cnt].push_back(nums[j]);
+                mp[nums[j]] = cnt;
+                cnt++;
+            }else{
+                qw[mp[nums[j]]].push_back(nums[j]);
+            }
+        }
+        
+        for(int j=0;j<cnt;j++){
+            int val = qw[j].size();
+            k5-= ((val)*(val-1))/2;
+            if(k5<=0) return 0;
+        }
+        int val = qw[cnt-1][0];
+        
+        int ans[val+1]={0};
+        for(int j=0;j<cnt;j++){
+            for(int k=j+1;k<cnt;k++){
+                ans[qw[k][0] - qw[j][0]] += qw[k].size()*qw[j].size();
+            }
+           
+        }
+        for(int j=1;j<=val;j++){
+            if(ans[j]==0) continue;
+            cout<<j<<" "<<ans[j]<<"\n";
+            k5-= ans[j];
+            if(k5<=0) return j;
+        }    
+        
+        return 0;    
+    }
+};

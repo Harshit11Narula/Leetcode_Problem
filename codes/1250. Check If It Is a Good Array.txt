@@ -1,0 +1,28 @@
+class Solution {
+public:
+    int gcd(int x , int y){
+        while(y){
+            int temp = y;
+            y = x%y;
+            x = temp;
+        }
+        return x;
+    }
+    
+    bool isGoodArray(vector<int>& arr) {
+        if(arr.size()==0) return false;
+        if(arr.size()==1){
+            if(arr[0]==1) return true;
+            else return false;
+        }
+        int val = arr[0];
+        for(int j=1;j<arr.size();j++)
+            val = gcd(val , arr[j]);
+        
+        if(val==1) 
+            return true;
+        else 
+            return false;
+        
+    }
+};

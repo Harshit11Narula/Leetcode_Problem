@@ -1,0 +1,217 @@
+static const int __ = []() {
+    std::ios::sync_with_stdio(false);
+    std::cin.tie(nullptr);
+    std::cout.tie(nullptr);
+    return 0;
+}();
+#define pb push_back
+
+const int MX_NODE_COUNT=UINT16_MAX;
+const int MX=UINT16_MAX;
+
+class Trie {
+public:
+    typedef uint16_t node_idx;
+    typedef uint16_t id_type;
+
+    constexpr static int ALPHA=26;
+    constexpr static node_idx NIL =UINT16_MAX;
+    constexpr static id_type NO_ID=UINT16_MAX;
+    constexpr static node_idx ROOT=0;
+    
+    struct Node
+    {
+        node_idx next[ALPHA];
+        id_type terminal_id;
+        Node() // will be taken care of in refresh()
+        {
+        }
+    };
+    
+    void refresh(int hint=MX_NODE_COUNT)
+    {
+        hint=min(hint, MX_NODE_COUNT);
+        memset((void*)this, 255, hint*sizeof(V[0]));
+        sz=1;
+    }
+    
+    int sz=1;
+    Node V[MX_NODE_COUNT];
+    Trie() {
+        /* refresh(); */
+    }
+    
+    void insert(const string& word, int id) {
+        node_idx curr=ROOT;
+        for(char c: word)
+        {
+            int cc=c-'a';
+            
+            node_idx nxt=V[curr].next[cc];
+            if(nxt==NIL)
+            {
+                nxt=sz;
+                V[curr].next[cc]=nxt;
+                sz++;
+            }
+            curr=nxt;
+        }
+        V[curr].terminal_id=id;
+    }
+    
+    /*
+    inline int move_ptr(char cc, int curr) {
+        return V[curr].next[cc-'a'];
+    }
+    */
+};
+Trie T, TR; // 2 tries: T for non-reversed words, TR for reversed words
+
+int p1[MX], // half length of odd  palindrome, centered at i 
+    p2[MX]; // half length of even palindrome, centered at i, i+1
+
+void Manacher(const string& s)
+{
+    int N=s.size();
+
+    for(int i=0, R=-1, CR=-1; i<N; i++)
+    {
+        int d=1;
+        if(i<=R) d=min(p1[2*CR-i], R-i+1);
+        while(0<=i-d && i+d<N && s[i-d] == s[i+d]) d++;
+        p1[i]=d;
+        if(R<i+d-1)
+        {
+            R=i+d-1;
+            CR=i;
+        }
+    }
+
+    for(int i=0, R=-1, CR=-1; i<N; i++)
+    {
+        int d=0;
+        if(i<R) d=min(p2[2*CR-i], R-i);
+        while(0 <= i-d && i+1+d<N && s[i-d] == s[i+1+d]) d++;
+        p2[i]=d;
+        if(R<i+d)
+        {
+            R=i+d;
+            CR=i;
+        }
+    }
+}
+
+int resIJ[2*MX];
+size_t ctr_res=0;
+
+class Solution {
+public:
+    vector<vector<int>> palindromePairs(vector<string>& words) {
+        int N=words.size();
+        
+        int totalWordLen=0;
+        for(const auto& word: words) totalWordLen+=word.size();
+
+        // reset termial_id-s and next[] "pointers" of all the nodes 
+        // that we may "use up" during this run
+        T .refresh(1 + totalWordLen);
+        TR.refresh(1 + totalWordLen); 
+        
+        for(int i=0; i<N; i++)
+        {
+            string& word=words[i];
+            T.insert(word, i);
+            reverse(word.begin(), word.end());
+            TR.insert(word, i);
+            reverse(word.begin(), word.end());
+        }
+
+        ctr_res=0;
+        for(int i=0; i<N; i++)
+        {
+            Manacher(words[i]);
+            int sz=words[i].size();
+            
+            // words[i]+words[j], len(words[i]) > len(words[j])
+            // words[i] must be in the form reverse(words[j]) + pali for some j and non-empty pali
+            {
+                Trie::node_idx curr_node=Trie::ROOT;
+                for(int k=0; k<sz; k++)
+                {
+                    int L=k, R=sz-1;
+                    int M=(L+R)/2, len=(R-L+1);
+                    bool rest_is_palindrome;
+
+                    if(len%2==1) rest_is_palindrome = (M+p1[M]-1==R);
+                    else         rest_is_palindrome = (M+p2[M]  ==R);
+
+                    int idx_j=TR.V[curr_node].terminal_id;
+                    if(rest_is_palindrome && idx_j!=Trie::NO_ID)
+                    {
+                        //result.pb({i, idx_j});
+                        resIJ[ctr_res  ]=i;
+                        resIJ[ctr_res+1]=idx_j;
+                        ctr_res+=2;
+                    }
+
+                    //curr_node=TR.move_ptr(words[i][k], curr_node);
+                    curr_node=TR.V[curr_node].next[words[i][k]-'a'];
+                    
+                    if(curr_node==Trie::NIL) break;
+                }
+
+                // words[i]+words[j], len(words[i]) == len(words[j])
+                // words[i] must be in the form reverse(words[j])
+                if(curr_node!=Trie::NIL)
+                {
+                    int idx_j=TR.V[curr_node].terminal_id;
+                    if (idx_j!=Trie::NO_ID && idx_j!=i)
+                    {
+                        //result.pb({i, idx_j});
+                        resIJ[ctr_res  ]=i;
+                        resIJ[ctr_res+1]=idx_j;
+                        ctr_res+=2;
+                    }
+                }
+            }   
+            
+            // words[j]+words[i], len(words[i]) > len(words[j])
+            // words[i] must be in the form pali + reverse(words[j]) for some j and non-empty pali
+            {
+                Trie::node_idx  curr_node=Trie::ROOT;
+                for(int k=sz-1; k>=0; k--)
+                {
+                    int L=0, R=k;
+                    int M=(L+R)/2, len=(R-L+1);
+                    bool rest_is_palindrome;
+
+                    if(len%2==1) rest_is_palindrome = (M+p1[M]-1==R);
+                    else         rest_is_palindrome = (M+p2[M]  ==R);
+
+
+                    int idx_j=T.V[curr_node].terminal_id;
+                    if(rest_is_palindrome && idx_j!=Trie::NO_ID)
+                    {
+                        //result.pb({idx_j, i});
+                        resIJ[ctr_res  ]=idx_j;
+                        resIJ[ctr_res+1]=i;
+                        ctr_res+=2;
+                    }
+
+                    //curr_node=T.move_ptr(words[i][k], curr_node);
+                    curr_node=T.V[curr_node].next[words[i][k]-'a'];
+                    if(curr_node==Trie::NIL) break;
+                }
+            }
+        }
+        
+        vector<vector<int>> result(ctr_res/2, {0, 0});
+        for(size_t i=0; i<ctr_res; i+=2)
+        {
+            result[i/2][0]=resIJ[i];
+            result[i/2][1]=resIJ[i+1];
+        }
+        
+        return move(result);
+    }
+};

@@ -1,0 +1,50 @@
+class Solution {
+public:
+    string largestMultipleOfThree(vector<int>& arr) {
+        int val  = 0;
+        sort(arr.begin() , arr.end());
+        vector<int> temp[3];
+        for(int j=0;j<arr.size();j++){
+            int q = arr[j]%3;
+            temp[q].push_back(j);
+            val+=q;
+            val%=3;
+        }
+        vector<int> id;
+        if(val==1){
+            if(temp[1].size()!=0){
+                id.push_back(temp[1][0]);
+            }else{
+                id.push_back(temp[2][0]);
+                id.push_back(temp[2][1]);
+            }
+        }
+        
+        if(val==2){
+            if(temp[2].size()!=0){
+                id.push_back(temp[2][0]);
+            }else{
+                id.push_back(temp[1][0]);
+                id.push_back(temp[1][1]);
+            }
+        }
+     //   for(int j=0;j<id.size();j++) cout<<id[j]<<" ";
+        int idx = id.size()-1;
+        string ans = "";
+        for(int j=arr.size()-1;j>=0;j--){
+            if(idx>=0 && id[idx]==j){
+                idx--;
+                continue;
+            }
+            ans += char(arr[j]+'0');
+        }
+        string final_ans = ans;
+        for(int j=0;j<ans.length();j++){
+            if(ans.at(j)!='0') break;
+            final_ans = ans.substr(j);
+        }
+        
+        return final_ans;
+        
+    }
+};

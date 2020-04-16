@@ -1,0 +1,41 @@
+class Solution {
+public:
+    int maxJumps(vector<int>& arr, int d) {
+        int n = arr.size();
+        vector<int> dp(n+1 , 1);
+        int ans = 0;
+        vector<pair<int , int> > qw;
+        for(int j=0;j<n;j++) qw.push_back({arr[j] , j});
+        sort(qw.begin() , qw.end());
+        reverse(qw.begin() , qw.end());
+        
+        for(int j=0;j<n;j++){
+            
+            int idx = qw[j].second;
+            for(int i=1;i<=d;i++){
+                if(idx+i>=arr.size()) break;
+                if(arr[idx]<=arr[idx+i]) break;
+                dp[idx+i] = max(dp[idx+i] , 1 + dp[idx]); 
+            }
+            for(int i=1;i<=d;i++){
+                if(idx-i<0) break;
+                if(arr[idx]<=arr[idx-i]) break;
+                dp[idx-i] = max(dp[idx-i] , 1 + dp[idx]); 
+            }
+           // cout<<qw[j].first<<" "<<qw[j].second<<" "<<dp[idx]<<"\n";
+            ans = max(ans , dp[idx]);
+        }
+        
+        
+        return ans;
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    }
+};

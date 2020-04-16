@@ -1,0 +1,46 @@
+
+/* bottom-up DP 2: minimum difficulty of finishing first n jobs in first d days
+*/class Solution {
+public:
+    int minDifficulty(vector<int>& jobs, int D) {
+        
+        int n = jobs.size(); // no of jobs
+        
+        if(n < D) return -1;
+        
+        vector<vector<int>> dp(n+1 , vector<int>(D+1 , 1e9));
+        
+        // Base Case
+        dp[1][1] = jobs[0];
+        
+        for(int j=2;j<=n;j++)
+            dp[j][1] = max(dp[j-1][1] , jobs[j-1]);
+        
+        
+        
+        for(int d = 2;d<=D; d++){
+            
+            for(int start = d;start<= (n - (D-d));start++){
+                
+                int maxval = 0;
+                
+                for(int end = start;end <= (n - (D-d));end++){
+                    
+                    maxval = max(maxval , jobs[end-1]);
+                    
+                    dp[end][d] = min(dp[end][d] , maxval + dp[start-1][d-1]);
+                    
+                    
+                }
+                
+            }
+            
+        }
+        
+        return dp[n][D];
+        
+      
+        
+    }
+};
+

@@ -1,0 +1,37 @@
+#include<bits/stdc++.h>
+using namespace std;
+class Solution {
+public:
+    vector<int> ans;
+    int const maxn = 100000;
+    Solution(int N, vector<int>& blacklist) {
+        ans.clear();
+        map<int , int> mp;
+        for(int j=0;j<blacklist.size();j++)
+            mp[blacklist[j]] = 1;
+        
+        for(int j=0;j<N;j++){
+            if(mp.find(j)==mp.end())
+                ans.push_back(j);
+            if(ans.size()>maxn)
+                break;
+            
+        }
+     
+    }
+    
+    int pick() {
+        int n = ans.size();
+        if(n==0){
+            return NULL;
+        }
+        int id = rand()%n;   
+        return ans[id];
+    }
+};
+
+/**
+ * Your Solution object will be instantiated and called as such:
+ * Solution* obj = new Solution(N, blacklist);
+ * int param_1 = obj->pick();
+ */

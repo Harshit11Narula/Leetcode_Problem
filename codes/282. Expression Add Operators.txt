@@ -1,0 +1,38 @@
+class Solution {
+public:
+    vector<string> ans;
+    void fun(string num ,string temp,long long int target ,int id ,long long int cur_val ,long long int last_val , long long int sign){
+        
+      //  cout<<temp<<" "<<cur_val<<"\n";
+     //   if(cur_val - > target)
+        
+        
+        if(id==num.length()){
+            if(target==cur_val) ans.push_back(temp);
+            return;
+        }
+        long long int w = 0;
+        for(long long int j=1;j+id<=num.length();j++){
+                w = w*10+num.at(id+j-1)-'0';
+             fun(num , temp+"+"+num.substr(id , j) , target , id+j , cur_val+w , w , 1 );
+        
+             fun(num , temp+"-"+num.substr(id , j) , target , id+j , cur_val-w , w , -1 );
+        
+            fun(num , temp+"*"+num.substr(id , j) , target , id+j , cur_val+sign*(w-1)*(last_val) , last_val*w , sign );
+            if(w==0) break;
+        }
+    }
+    
+    vector<string> addOperators(string num, int target) {
+        if(num=="") return ans;
+        string temp="";
+        long long int w = 0;
+      for(long long int j=1;j<=num.size();j++){  
+        temp+=num.at(j-1);
+          w = w*10 + num.at(j-1) - '0';
+        fun(num,temp, target ,j, w , w , 1 );
+        if(w==0) break;
+      }
+        return ans;
+    }
+};

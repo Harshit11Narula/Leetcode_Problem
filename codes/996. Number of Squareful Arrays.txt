@@ -1,0 +1,61 @@
+class Solution {
+public:
+    int maxele = 2e9+1;
+    vector<int> adj[13];
+    int n , ans = 0;
+    vector<int> temp;
+    set<vector<int>> s;
+    void allpath(int src , int used[] , vector<int>& arr){
+        //cout<<src<<" ";
+        used[src] = 1;
+        temp.push_back(arr[src]);
+        map<int , int> qw;
+        for(int j=0;j<adj[src].size();j++){
+            int w = adj[src][j];
+            if(used[w]==0 && qw[arr[w]]==0){
+                qw[arr[w]] = 1;
+                allpath(w , used,arr);
+            }
+        }
+        if(temp.size()==n){
+            
+            ans++;
+        }
+        used[src] = 0;
+        temp.pop_back();
+      //  cout<<"\n";
+    }
+    
+    bool check(int val){
+        
+        int d =  (int)sqrt(val);
+        return d*d==val;
+    }
+    
+    
+    int numSquarefulPerms(vector<int>& arr) {
+        n = arr.size();
+        
+        
+        for(int j=0;j<arr.size();j++){
+            for(int i=j+1;i<arr.size();i++){
+                if(check(arr[j]+arr[i])==1){
+                        adj[j].push_back(i) , adj[i].push_back(j);
+                //    cout<<j<<" "<<i<<"\n";           
+                    
+                }
+            }
+        }
+        int used[13] = {0};
+        map<int , int> qw;
+        for(int j=0;j<arr.size();j++){
+            if(qw[arr[j]]==0){
+                qw[arr[j]]=1;
+                allpath(j , used , arr);
+            }
+         }
+        return ans;
+        
+        
+    }
+};

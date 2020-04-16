@@ -1,0 +1,47 @@
+class Solution {
+public:
+    int minCut(string s) {
+        if(s.length()==0) return 0;
+        if(s.length()==1) return 0;
+        
+        int n = s.length();
+        int dp[n+1];
+        dp[0] = 0;
+        bool pa[n+1][n+1];
+        for(int j=1;j<=s.length();j++){
+            dp[j] = dp[j-1] + 1;
+
+            pa[j][j] = true;
+        }
+        cout<<"\n";
+        for(int j=2;j<=s.length();j++){
+            if(s.at(j-1)==s.at(j-2)){
+                pa[j-1][j] = true; 
+                dp[j] = min(dp[j] , dp[j-2] + 1);
+            }else{
+                pa[j-1][j] = false;
+                dp[j] = min(dp[j-1] +1 , dp[j]);
+            }
+        }
+        for(int len = 3;len<=s.length();len++){
+            for(int j=len;j<=s.length();j++){
+                if(s.at(j - 1) == s.at(j - len) && pa[j-len+2][j-1]){
+                    dp[j] = min(dp[j] , dp[j - len] + 1);
+                     pa[j-len+1][j] = true;
+                }else{
+                    
+                    for(int k=0;k<len-1 ;k++){
+                   //     cout<<j-k<<" "<<j<<" "<<pa[j-k][j]<<"\n";
+                      
+                        if(pa[j-k][j])
+                            dp[j] = min(dp[j] , dp[j-k-1]+1);
+                    }
+                    pa[j-len+1][j] = false;
+                }   
+            }
+        }
+      
+
+        return dp[s.length()] - 1;
+    }
+};

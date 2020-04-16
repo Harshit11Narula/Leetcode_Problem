@@ -1,0 +1,54 @@
+class Solution {
+public:
+    
+    
+    int fun(int arr[] , int n , int k){
+        int sum = 0;
+        int val = INT_MIN;
+        map<int , int> mp;
+        for(int j=0;j<n;j++){
+            sum+=arr[j];
+           // cout<<sum<<" ";
+            if(sum<=k) val = max(val , sum);
+           
+            auto it = mp.lower_bound(sum-k);
+            if((*it).second!=0 && sum-(*it).first <= k){
+                val = max(val , sum - (*it).first);
+             ////   cout<<sum - (*it).first<<", "<<(*it).first;
+            }
+            mp[sum] = 1;
+          //  cout<<"\n";
+        }
+      //  cout<<"\n";
+        return val;
+    }
+    
+    
+    
+    int maxSumSubmatrix(vector<vector<int>>& arr, int k) {
+        int ans = INT_MIN;
+        int n = arr.size();
+        int m = arr[0].size();
+        int  presum[n][m] = {0};
+        for(int j=0;j<n;j++){
+            presum[j][0] = arr[j][0];
+            for(int i=1;i<m;i++){
+                presum[j][i] = presum[j][i-1] + arr[j][i];                
+            }
+        }
+        
+        for(int colst = 0;colst<m;colst++){
+            for(int colen = colst;colen<m;colen++){
+      //  int colst = 0 , colen = 8;
+                    int temp[n];
+                    for(int j=0;j<n;j++){
+                        temp[j] = presum[j][colen] - ((colst!=0)?presum[j][colst-1]:0);
+                    }
+                int val = fun(temp , n , k);
+              //  cout<<colst<<" "<<colen<<" "<<val<<"\n";
+                if(val<=k) ans = max(ans , val);
+            }
+        }
+        return ans;
+    }
+};

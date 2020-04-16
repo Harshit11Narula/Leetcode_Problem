@@ -1,0 +1,40 @@
+#define ll long long int
+class Solution {
+public:
+    
+    ll gcd(ll x , ll y){
+        while(y){
+            ll temp = y;
+            y = x%y;
+            x = temp;
+        }
+        return x;
+    }
+    
+    ll cal(ll val ,ll a , ll b){
+        ll lcm = (a*b)/gcd(a , b);
+        return val/a + val/b - val/lcm;
+    }
+    
+    
+    ll const mod = 1e9+7;
+    int nthMagicalNumber(ll n, ll a, ll b) {
+        
+        ll st = 1 , en = 1e15;
+        while(en>=st){
+            ll mid = (st+en)/2;
+            ll val = cal(mid , a , b);
+            if(val==n){
+             //   cout<<mid<<"\n";
+                if(mid%a==0 || mid%b==0) return mid%mod;
+                ll temp = min(a - mid%a , b - mid%b);
+                ll temp2 = min(mid%a , mid%b);
+                if(cal(mid+temp, a , b)==n) return (mid+temp)%mod;
+                return (mid-temp2)%mod;
+            }
+            if(val<n) st = mid+1;
+            else en = mid-1;
+        }
+        return -1;
+    }
+};

@@ -1,0 +1,37 @@
+bool cmp(string& x , string& y){
+    return x.length() < y.length();
+}
+class Solution {
+public:
+    vector<string> findAllConcatenatedWordsInADict(vector<string>& words) {
+        vector<string> ans;
+        if(words.size()<2) return ans;
+        sort(words.begin() , words.end() , cmp);
+        unordered_set<string> s;
+        for(int j=0;j<words.size();j++){
+            string temp = words[j];
+            if(temp.length()==0) continue;
+            int dp[temp.length()] = {0};
+            for(int i=0;i<temp.length();i++){
+                string qw = "";
+                for(int k=i;k>=0;k--){
+                    qw = temp.at(k) + qw;
+                    if(s.find(qw)!=s.end()){
+                        if(k==0 || dp[k-1]==1){ 
+                            dp[i] = 1;
+                            break;
+                        }
+
+                    }
+                }
+            }
+            
+            if(dp[temp.length()-1]==1)
+                ans.push_back(temp);
+            s.insert(temp);
+        }
+        
+        return ans;
+        
+    }
+};

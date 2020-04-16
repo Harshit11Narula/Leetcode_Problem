@@ -1,0 +1,14 @@
+class Solution {
+public:
+    int poorPigs(int n, int d, int t) {
+        int val = t/d;
+        val++;
+        // int pig = val -1;
+        // k = 2
+        // 2*k =  (k+1)*(k+1) + (k-1)*(k-1) ... 
+        int pig = 1;
+        int ans = 0;
+        while(pig < n) pig*=val , ans++;
+        return ans;
+    }
+};

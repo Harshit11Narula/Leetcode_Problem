@@ -1,0 +1,48 @@
+class SummaryRanges {
+public:
+    /** Initialize your data structure here. */
+    
+    map<int , int> mp;
+    SummaryRanges() {
+        
+    }
+    
+    void addNum(int val) {
+        auto it = mp.lower_bound(val);
+        int minval = val , maxval = val;
+        if(it!=mp.end() && it->first==val){
+            return;
+        }
+        if(it!=mp.end() && it->first == val+1){
+            maxval = max(maxval , it->second);
+            it = mp.erase(it);
+        }
+        if(it!=mp.begin()){
+            --it;
+            if(it->second>=val){
+                return;
+            }
+            if(it->second+1 == val){
+                minval = min(minval ,it->first);
+                it = mp.erase(it);
+            }
+        }
+        mp[minval] = maxval;
+  
+    }
+    
+    vector<vector<int>> getIntervals() {
+        vector<vector<int>> ans;
+        for(auto i: mp){
+            ans.push_back(vector<int>{i.first , i.second});
+        }
+        return ans;
+    }
+};
+
+/**
+ * Your SummaryRanges object will be instantiated and called as such:
+ * SummaryRanges* obj = new SummaryRanges();
+ * obj->addNum(val);
+ * vector<vector<int>> param_2 = obj->getIntervals();
+ */

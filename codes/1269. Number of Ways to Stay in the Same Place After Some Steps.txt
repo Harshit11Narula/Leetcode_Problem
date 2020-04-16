@@ -1,0 +1,21 @@
+#define ll long long int
+ll const mod = 1e9+7;
+class Solution {
+public:
+   vector<vector<int>> dp;
+    
+    int fun(int i , int n , int m){
+        if(i==0 && n==0) return 1;
+        if(i<0 || i>=m || n == 0  || i>n) return 0;
+        if(dp[i][n]!=-1) return dp[i][n];
+        dp[i][n]= (fun(i+1 , n-1 , m)%mod + fun(i-1 , n-1 , m)%mod + fun(i ,n-1 , m)%mod)%mod;
+        return dp[i][n];
+    }
+    
+    
+    int numWays(int n, int m) {
+      dp.resize(min(m , n/2+1) , vector<int>(n+1 , -1));   
+      return fun(0, n , min(m , n/2+1));
+       
+    }
+};

@@ -1,0 +1,57 @@
+class Solution {
+public:
+    int oddEvenJumps(vector<int>& arr) {
+        int ans = 1;
+        int n = arr.size();
+        map<int , int> mp;
+        bool dp[n][2];
+        dp[n-1][0] = true;
+        dp[n-1][1] = true;
+        mp[arr[n-1]] = n-1;
+        for(int j = n-2;j>=0;j--){
+            auto it = mp.lower_bound(arr[j]);
+            
+            // Initial define
+            pair<int , int> minval = {INT_MIN , -1};
+            pair<int , int> maxval = {INT_MAX , -1};
+            
+            // Set the value just greater or equal than arr[j]
+            if((*it).second!=0)
+                minval = {(*it).first , (*it).second};
+            
+            // Set the value just less or equal than arr[j]
+            while((*it).second==0) it--;
+            while(it!=mp.begin() && (*it).first > arr[j]) it--;
+            if((*it).first <= arr[j] && (*it).second!=0)
+                maxval = {(*it).first , (*it).second};
+            
+            
+            // Update dp bool 
+        
+            if(arr[j] <= minval.first){ 
+                if(dp[minval.second][1]){
+                    dp[j][0] = true;
+                    
+                    ans++;
+                }else{
+                    dp[j][0] = false;
+                }
+            }else{
+                dp[j][0] = false;
+            }
+            if(arr[j] >= maxval.first){
+                if(dp[maxval.second][0]){
+                    dp[j][1] = true;
+                }else{
+                    dp[j][1] = false;
+                }
+            }else{
+                dp[j][1] = false;
+            }
+            mp[arr[j]] = j;
+            
+            
+        }
+        return ans;
+    }
+};

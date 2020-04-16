@@ -1,0 +1,54 @@
+class Solution {
+public:
+    
+    
+    int fin(vector<int>& num1 , vector<int>& num2 , int id){
+        int st = 0 , en = num1.size()-1;
+        while(en>=st){
+            int mid = (st+en)/2;
+            int temp1 = mid+1;
+            int temp2 = std::lower_bound(num2.begin(), num2.end(), num1[mid]) - num2.begin();
+            int temp3 = std::upper_bound(num2.begin(), num2.end(), num1[mid]) - num2.begin();
+            int total = temp1 + temp2;
+            if(temp1 + temp2 <= id && temp1 + temp3 >= id){
+                cout<<num1[mid] <<" "<<temp1<<" "<<temp2<<" "<<temp3<<"\n";
+                    return num1[mid];
+                
+            }
+            if(total < id) st = mid+1;
+            else en = mid-1;
+        }
+         st = 0 , en = num2.size()-1;
+        while(en>=st){
+            int mid = (st+en)/2;
+            int temp1 = mid+1;
+            int temp2 = std::lower_bound(num1.begin(), num1.end(), num2[mid]) - num1.begin();
+            
+            int temp3 = std::lower_bound(num1.begin(), num1.end(), num2[mid]) - num1.begin();
+            int total = temp1 + temp2;
+             if(temp1 + temp2 <= id && temp1 + temp3 >= id){ 
+                    return num2[mid];
+               
+            }
+            if(total < id) st = mid+1;
+            else en = mid-1;
+        }
+        return 0.0;
+    }
+    
+    
+    
+    
+    
+    double findMedianSortedArrays(vector<int>& num1, vector<int>& num2) {
+        if((num1.size() + num2.size())%2==0){
+            int id =(num1.size() + num2.size())/2;
+            cout<<id<<"\n";
+            return (((double)fin(num1 , num2 , id) + (double)fin(num1 , num2 , id+1))/(2.00));
+            
+        }else{
+            int id = (num1.size() + num2.size())/2;
+            return fin(num1 , num2 , id+1);
+        }
+    }
+};

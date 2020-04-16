@@ -1,0 +1,79 @@
+class Solution {
+public:
+    vector<vector<string> > ans;
+    bool check(int x1 , int y1 , vector<string>& temp){
+        for(int j=0;j<temp.size();j++){
+            if(temp[x1][j]=='Q') 
+                return false;
+            if(temp[j][y1]=='Q')
+                return false;
+        }
+        int x2 = x1 , y2 = y1;
+        while(x1>=0 && y1>=0){
+            if(temp[x1][y1]=='Q')
+                return false;
+            x1--;
+            y1--;
+        }
+        x1 = x2 , y1=  y2;
+        while(x1>=0 && y1<temp.size()){
+            if(temp[x1][y1]=='Q')
+                return false;
+            x1--;
+            y1++;
+        }
+         x1 = x2 , y1=  y2;
+        while(x1<temp.size() && y1<temp.size()){
+            if(temp[x1][y1]=='Q')
+                return false;
+            x1++;
+            y1++;
+        }
+         x1 = x2 , y1=  y2;
+        while(x1<temp.size() && y1>=0){
+            if(temp[x1][y1]=='Q')
+                return false;
+            x1++;
+            y1--;
+        }
+        return true;
+    }
+    
+    
+    
+    void solve(vector<string>&  temp , int p , int lastx , int lasty){
+        if(p==temp.size()){
+            ans.push_back(temp);
+            return;
+        }
+        for(int j=0;j<temp.size();j++){
+            for(int i=0;i<temp[j].length();i++){
+                if(j<lastx) continue;
+                if(j==lastx && i<=lasty) continue;
+                if(temp[j][i]=='.'){
+                    if(check(j , i , temp)){
+                        temp[j][i] = 'Q';
+                     //   cout<<j<<" "<<i<<"\n";
+                        solve(temp , p+1 , j,  i);
+                        temp[j][i] = '.';
+                    }
+                    
+                }
+            }
+        }
+    }
+    
+    
+    
+    
+    vector<vector<string>> solveNQueens(int n) {
+        vector<string> temp;
+        for(int j=0;j<n;j++){
+            string r = "";
+            for(int i=0;i<n;i++) r+= ".";
+            temp.push_back(r);
+        }
+        solve(temp , 0 , -1 , -1);
+        return ans;
+    }
+};

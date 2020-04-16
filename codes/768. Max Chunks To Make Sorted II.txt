@@ -1,0 +1,25 @@
+class Solution {
+public:
+    int fun(vector<int>& arr , int st , int en){
+        if(st==en) return 1;
+        int minval[en-st+1];
+        minval[en] = arr[en];
+        for(int k= en-1;k>=st;k--){
+            minval[k] = min(minval[k+1] , arr[k]);
+        }
+        int temp = INT_MIN;
+        int ans = 0;
+        for(int k=st;k<en;k++){
+            temp = max(temp , arr[k]);
+            if(temp <= minval[k+1])
+                ans++ , temp = INT_MIN;
+        }
+        return ans+1;
+    }
+    
+    
+    
+    int maxChunksToSorted(vector<int>& arr) {
+        return fun(arr , 0 , arr.size()-1);
+    }
+};

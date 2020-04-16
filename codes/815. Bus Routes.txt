@@ -1,0 +1,50 @@
+class Solution {
+public:
+    int numBusesToDestination(vector<vector<int>>& arr, int s, int t) {
+        if(s==t) return 0;
+        map<int , vector<int> > mp;
+        int maxele = 0;
+        int used[501]= {0};
+        for(int j=0;j<arr.size();j++){
+            for(int i=0;i<arr[j].size();i++){
+                mp[arr[j][i]].push_back(j);
+                maxele = max(maxele , arr[j][i]);
+            }
+        }
+        int ans[maxele+1];
+        for(int j=0;j<=maxele;j++) ans[j] = INT_MAX;
+        queue<pair<int , int> > qw;
+    
+        qw.push({s , 1});
+        ans[s] = 1;
+        while(!qw.empty()){
+            pair<int , int> laste = qw.front();
+            qw.pop();
+            int src = laste.first;
+            qw.pop();
+                for(int idx : mp[src]){
+                    if(used[idx]==1) continue;
+                    used[idx] = 1;
+                    bool flag = false;
+                    int val = INT_MAX;
+                    for(int j=0;j<arr[idx].size();j++) {
+                        if(arr[idx][j]==t) flag = true; 
+                        val = min(val , ans[arr[idx][j]]);
+                    }
+                    //cout<<val<<"\n";
+                    if(flag) return val;
+                    
+                    for(int j=0;j<arr[idx].size();j++){
+                        if(ans[arr[idx][j]] > val){
+                            ans[arr[idx][j]] = val+1;
+                            qw.push({arr[idx][j] , val+1});
+                        }
+                    }
+                }
+
+        }
+        
+        return -1;
+        
+    }
+};

@@ -1,0 +1,40 @@
+class Solution {
+public:
+    
+    bool check(vector<int>& nums , int m , long long int sum){
+        long long int temp[m] = {0};
+        long long int qw = 0 , id = 0;
+        for(long long int j=0;j<nums.size();j++){
+            if(nums[j]>sum) return false;
+            if((qw+nums[j] > sum || (nums.size()-j) < (m-id)) && id!=(m-1) ){
+                temp[id] = 1;
+                qw = 0;
+                id++;      
+            }
+            qw+=nums[j];            
+        }
+        if(id==m-1 && qw<=sum) return true;
+        return false;
+    }
+    
+    
+    
+    long long int splitArray(vector<int>& nums, int m) {
+       long long int minval = INT_MAX;
+       long long int maxval = 0;
+        long long int final_ans = 0;
+       for(int j=0;j<nums.size();j++) minval = min(minval , (long long int)nums[j]) , maxval += nums[j];
+       
+        while(maxval >= minval){
+            long long int mid= (minval + maxval)/2;
+            cout<<mid<<"\n";
+            if(check(nums , m , mid)){
+                final_ans = mid;
+                maxval = mid-1;
+            }else{
+                minval = mid+1;
+            }
+        }
+        return final_ans;
+    }
+};

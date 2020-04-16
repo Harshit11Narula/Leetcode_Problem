@@ -1,0 +1,52 @@
+class Solution {
+public:
+    vector<string> ans;
+    unordered_map<string , int> mp;
+    string dub;
+    int maxlen = 0;
+    void fun(string temp ,int id , int cur , int last , int qw){
+        if(temp.length()+dub.length()-id < maxlen) return;
+      //  cout<<temp<<"\n";
+       
+        if(cur==-1){    
+            string r = "";
+            int no = 0;
+            for(int j=0;j<temp.length();j++){
+                if(temp.at(j)==')' && no==0)
+                    {fun(r + temp.substr(j+1) , id , 0 , j, 0);r+=temp.at(j);no=1;continue;}
+                r+=temp.at(j);
+                no =0;
+            }
+            
+            return;
+        }
+        if(id==dub.length()){
+            if(cur==0 && mp.find(temp)==mp.end())
+             {ans.push_back(temp);maxlen = max(maxlen , (int)temp.length());mp[temp] = 1;}
+            return;
+        }
+        // if(dub.at(id)==')') cur--;
+        // if(dub.at(id)=='(') cur++;
+        // temp += dub.at(id);
+        // fun(temp , id+1 , cur, last);
+        if(dub.at(id)=='('){
+            fun(temp+dub.at(id) , id+1 , cur+1 , last , 1);
+            if(qw!=1)
+            fun(temp , id+1 , cur , last, 0);
+        }else{
+            temp+=dub.at(id);
+            if(dub.at(id)==')') cur--;
+            fun(temp , id+1 , cur , last, 0);
+        }
+        
+    }
+    
+    
+    vector<string> removeInvalidParentheses(string s) {
+        dub = s;
+        fun("" , 0 , 0 , 0 , 0);
+        if(ans.size()==0) ans.push_back("");
+        
+        return ans;
+    }
+};

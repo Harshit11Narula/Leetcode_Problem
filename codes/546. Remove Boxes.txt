@@ -1,0 +1,28 @@
+
+class Solution {
+public:   
+    int fun(int i , int j , int k , vector<int>&arr ,   vector<vector<vector<int> > >&dp){
+        if(i>j) return 0;
+        if(dp[i][j][k]!=0) return dp[i][j][k];
+       // cout<<i<<" "<<j<<" "<<k<<"\n";
+        for(;i+1<=j&&arr[i+1]==arr[i];i++,k++);
+        int res = (k+1)*(k+1) + fun(i+1 , j , 0 , arr , dp);
+        
+        for(int m=i+1;m<=j;m++){
+            if(arr[m]==arr[i]){
+                res = max(res , fun(i+1 , m-1 , 0 , arr, dp) + fun(m , j , k+1,arr , dp));
+            }
+        }
+        dp[i][j][k] = res;
+        return res;
+        
+    }
+    
+    
+    
+    int removeBoxes(vector<int>& arr) {
+        int n = arr.size();
+        vector<vector<vector<int> > > dp(n , vector<vector<int>>(n , vector<int>(n , 0)));
+        return fun(0 , n-1 , 0 , arr, dp);
+    }
+};

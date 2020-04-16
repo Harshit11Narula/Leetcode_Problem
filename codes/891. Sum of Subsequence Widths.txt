@@ -1,0 +1,22 @@
+#define ll long long int
+class Solution {
+public:
+    ll const mod = 1e9+7;
+    int sumSubseqWidths(vector<int>& arr) {
+        sort(arr.begin() , arr.end());
+        ll ans = 0 , sum = arr[0] , cnt = 1;
+        for(int j=1;j<arr.size();j++){
+            ll w = arr[j];
+            ans += (w*(cnt) - sum); 
+            sum *= (ll)2;
+            cnt *= (ll)2;
+            sum+= arr[j];
+            cnt++;
+            sum%=mod;
+            cnt%=mod;
+            ans%=mod;
+           // cout<<sum<<" "<<ans<<"\n";
+        }
+        return ans;
+    }
+};

@@ -1,0 +1,37 @@
+class Solution {
+public:
+    vector<int> smallestSufficientTeam(vector<string>& a, vector<vector<string>>& b) {
+        map<string , int> mp;
+        int oversum = 0;
+        for(int j=0;j<a.size();j++){
+            mp[a[j]] = j;
+            oversum += (1<<j);
+        }
+        vector<int> arr;
+        for(int j=0;j<b.size();j++){
+            int val = 0;
+            for(int i=0;i<b[j].size();i++){
+                if(mp.find(b[j][i])!=mp.end()){
+                    val += (1<<mp[b[j][i]]);
+                }
+            }
+            arr.push_back(oversum - val);
+        }
+        vector<int> dp[oversum+1];
+        for(int j=0;j<arr.size();j++){
+            for(int i=1;i<=oversum;i++){
+                if(dp[i].size()!=0){
+                    int ad = arr[j]&i;
+                    
+                    if(dp[ad].size()==0 || dp[ad].size() > dp[i].size()+1){
+                        dp[ad] = dp[i];
+                        dp[ad].push_back(j);
+                    }  
+                }
+            }
+            dp[arr[j]].clear();
+            dp[arr[j]].push_back(j);
+        }
+        return dp[0];
+    }
+};

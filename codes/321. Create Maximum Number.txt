@@ -1,0 +1,144 @@
+class Solution {
+public:
+    vector<int> arr1;
+    vector<int> arr2;
+    vector<int> ans;
+    void fun1(int k , vector<int>& nums1 , int id){
+        if(k==0) return;
+        int idx = -1;
+        int maxval = -1;
+        for(int j = id;j<nums1.size() - k+1;j++){
+            if(nums1[j] > maxval){
+                maxval = nums1[j];
+                idx = j;
+            }
+        }
+        arr1.push_back(maxval);
+        fun1(k-1 , nums1 , idx+1);
+    }
+    
+    void fun2(int k , vector<int>& nums2 , int id){
+        if(k==0) return;
+        int idx = -1;
+        int maxval = -1;
+        for(int j = id;j<nums2.size() - k+1;j++){
+            if(nums2[j] > maxval){
+                maxval = nums2[j];
+                idx = j;
+            }
+        }
+        arr2.push_back(maxval);
+        fun2(k-1 , nums2 , idx+1);
+    }
+    void merge(){
+       
+        if(ans.size()==0){
+            int x = 0 , y  =0;
+            while(x < arr1.size() && y < arr2.size()){
+                if(arr1[x] < arr2[y]){
+                    ans.push_back(arr2[y]);
+                    y++;
+                }else if(arr2[y] < arr1[x]){
+                    ans.push_back(arr1[x]);
+                    x++;
+                }else{
+                    int temp1 = x , temp2 = y;
+                    while(temp1<arr1.size() && temp2<arr2.size()){
+                        if(arr1[temp1]==arr2[temp2]){ 
+                            temp1++, temp2++;
+                        }else{
+                            if(arr1[temp1] > arr2[temp2]){
+                                temp2 = arr2.size();
+                                break;
+                            }else{
+                                temp1 = arr1.size();
+                                break;
+                            }
+                        }
+                    }
+                   
+                    if(temp1==arr1.size()){
+                        ans.push_back(arr2[y]);
+                        y++;
+                    }else{
+                        ans.push_back(arr1[x]);
+                        x++;
+                    }
+                }
+            }
+           
+            while(x<arr1.size()) ans.push_back(arr1[x]) , x++;
+            while(y<arr2.size()) ans.push_back(arr2[y]) , y++;
+           
+           
+        }else{
+            bool flag = false;
+            vector<int> temp;
+            int x = 0 , y  =0;
+            int id = 0;
+            while(x < arr1.size() && y < arr2.size()){
+                if(arr1[x] < arr2[y]){
+                    temp.push_back(arr2[y]);
+                    y++;
+                }else if(arr2[y] < arr1[x]){
+                    temp.push_back(arr1[x]);
+                    x++;
+                }else{
+                    
+                    int temp1 = x , temp2 = y;
+                    while(temp1<arr1.size() && temp2<arr2.size()){
+                        if(arr1[temp1]==arr2[temp2]){ 
+                            temp1++, temp2++;
+                        }else{
+                            if(arr1[temp1] > arr2[temp2]){
+                                temp2 = arr2.size();
+                                break;
+                            }else{
+                                temp1 = arr1.size();
+                                break;
+                            }
+                        }
+                    }
+                    if(temp1==arr1.size()){
+                        temp.push_back(arr2[y]);
+                        y++;
+                    }else{
+                        temp.push_back(arr1[x]);
+                        x++;
+                    }
+                    
+                    
+                }
+            }
+            while(x<arr1.size()) temp.push_back(arr1[x]) , x++;                  
+            while(y<arr2.size()) temp.push_back(arr2[y]) , y++;
+            
+           
+            for(int j=0;j<temp.size();j++){
+                if(temp[j] > ans[j]){
+                    flag =  true;
+                    break;
+                }
+                if(ans[j] > temp[j]){
+                    break;
+                }
+            }
+            if(flag){
+                ans = temp;
+            } 
+        }
+    }
+    vector<int> maxNumber(vector<int>& nums1, vector<int>& nums2, int k) {
+        int n = nums1.size();
+        int m = nums2.size();
+        for(int j=0;j<=k;j++){
+            if(j > n || k-j > m) continue;
+            arr1.clear();
+            arr2.clear();
+            fun1(j , nums1 , 0);
+            fun2(k-j , nums2, 0);
+            merge();
+        }
+        return ans;
+    }
+};

@@ -1,0 +1,28 @@
+class Solution {
+public:
+    int const mod = 1e9+7;
+    int profitableSchemes(int g, int p, vector<int>& a, vector<int>& b) {
+        
+        vector<vector<int>> dp(g+1 , vector<int>(p+1 , 0));
+        dp[0][0]  = 1;
+        for(int j=0;j<a.size();j++){
+            for(int i=g;i>=0;i--){
+                if(a[j] + i > g) continue;
+                int idx = a[j]+i;
+                for(int k=p;k>=0;k--){
+                    int val = min(p , b[j] + k);
+                    dp[idx][val] += dp[i][k];
+                    dp[idx][val]%=mod;
+                }
+            }
+        }
+        int ans=  0;
+        for(int j=0;j<=g;j++){
+            ans+=dp[j][p];
+            ans%=mod;
+        }
+        return ans;
+        
+        
+    }
+};

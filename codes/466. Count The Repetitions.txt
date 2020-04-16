@@ -1,0 +1,38 @@
+#define ll long long int
+class Solution {
+public:
+    int getMaxRepetitions(string s1, int n1, string s2, int n2) {
+        int arr[s2.length()][2];
+        
+        for(int i=0;i<s2.length();i++){
+        string s3 = s2.substr(i);
+        int st = 0;
+        int times = 0;
+        for(int j=0;j<s1.length();j++){
+            if(s1.at(j)==s3.at(st)){
+                st++;
+                if(st==s3.length()){
+                    times++;
+                    st = 0;
+                    s3 = s2;
+                  }
+                } 
+            }
+            if(times == 0)
+                st+=i;
+            arr[i][0] = times;
+            arr[i][1] = st;
+        }
+        int beg = 0;
+        int ans = 0;
+        for(int j=0;j<n1;j++){
+            ans += arr[beg][0];
+            beg = arr[beg][1];  
+           // cout<<ans<<" "<<beg<<"\n";
+        }
+        return ans/n2;
+        
+        
+       
+    }
+};

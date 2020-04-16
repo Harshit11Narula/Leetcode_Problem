@@ -1,0 +1,115 @@
+class Solution {
+public:
+    int maxn = 1000;
+    vector<int> adj[200000];
+    vector<vector<string>> final_ans;
+    vector<string> ans;
+    string temp;
+    
+    void dfs(int des , int src , vector<string>& wordList,  vector<pair<int , vector<int> > >& dest){
+       // cout<<wordList[des-1]<<"\n";
+       
+        if(des==src){
+            ans.push_back(temp);
+            reverse(ans.begin() , ans.end());
+            
+            final_ans.push_back(ans);
+            
+            reverse(ans.begin() , ans.end());
+            ans.pop_back();
+            return;
+        }
+       // cout<<des<<"cross\n";
+     
+        ans.push_back(wordList[des-1]);
+     unordered_map<int , int> mp;
+        for(int j=0;j<dest[des].second.size();j++){
+            if(mp.find(dest[des].second[j])!=mp.end()) continue;
+            mp[dest[des].second[j]] = 1;
+    
+            dfs(dest[des].second[j] , src , wordList, dest);
+        }
+        ans.pop_back();
+    }
+    
+    
+    void fun(int src ,int des, vector<string>& wordList){
+        typedef pair<int, int> iPair; 
+        priority_queue< iPair, vector <iPair> , greater<iPair> > pq; 
+        
+    vector<int> empty;
+    vector<pair<int , vector<int> > > dist(200000, {100000 , empty});
+        pq.push(make_pair(0, src)); 
+        dist[src].first = 0; 
+        while (!pq.empty()) 
+        { 
+        int u = pq.top().second; 
+        pq.pop(); 
+  
+        vector<int>::iterator i; 
+        for (i = adj[u].begin(); i != adj[u].end(); ++i) 
+        { 
+            int v = (*i); 
+  
+                if (dist[v].first >= dist[u].first + 1) 
+                { 
+                    if(dist[v].first == dist[u].first + 1){ 
+                        dist[v].first = dist[u].first + 1;
+                        dist[v].second.push_back(u);
+                        pq.push(make_pair(dist[v].first, v)); 
+                    }else{
+                         dist[v].first = dist[u].first + 1;
+                         dist[v].second.clear();
+                         dist[v].second.push_back(u);
+                         pq.push(make_pair(dist[v].first, v)); 
+                    }
+                }    
+            }    
+        } 
+        
+        
+        
+        dfs(des , src , wordList , dist);
+        
+    }
+    vector<vector<string>> findLadders(string beginWord, string endWord, vector<string>& wordList) {
+        bool flag = true;
+        int des = -1;
+        for(int j=0;j<wordList.size();j++){
+            if(wordList[j]==endWord){
+                flag = false;
+                des = j+1;
+            }
+        }
+        if(flag) return final_ans;
+        temp = beginWord;
+        
+        for(int j=0;j<wordList.size();j++){
+            int c = 0;
+            for(int i=0;i<beginWord.length();i++)
+                if(beginWord.at(i) != wordList[j].at(i))
+                        c++;
+            if(c==1){
+                adj[0].push_back(j+1);
+                adj[j+1].push_back(0);
+            }   
+        }
+        for(int j=0;j<wordList.size();j++){
+            for(int k=j+1;k<wordList.size();k++){
+                int c = 0;
+                 for(int i=0;i<wordList[j].length();i++)
+                     if(wordList[j].at(i) != wordList[k].at(i))
+                         c++;
+                if(c==1){
+                    adj[k+1].push_back(j+1);
+                    adj[j+1].push_back(k+1);
+                } 
+                
+            }      
+        }
+       
+        fun(0 , des, wordList);
+        return final_ans;
+        
+    }
+};

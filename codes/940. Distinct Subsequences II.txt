@@ -1,0 +1,15 @@
+int const mod = 1e9+7;
+class Solution {
+public:
+    int distinctSubseqII(string s) {
+       
+        vector<int> arr(26 , 0);
+        int sum = 1;
+        for(int j=0;j<s.length();j++){
+            int old_sum = sum;
+            sum = ((2*sum)%mod + mod  - arr[s.at(j)-'a'])%mod;
+            arr[s.at(j)-'a'] = old_sum;
+        }
+        return (sum - 1 + mod)%mod;
+    }
+};

@@ -1,0 +1,17 @@
+class Solution {
+public:
+    bool xorGame(vector<int>& arr) {
+      //  map<int , int> mp;
+        int temp = 0;
+        for(int j=0;j<arr.size();j++){
+         //   mp[arr[j]]++;
+            temp ^= arr[j];
+        }
+     //   int val = 0;
+     //   for(auto it = mp.begin();it!=mp.end();++it) val += (*it).second & 1;
+        
+        if(arr.size()&1 && temp!=0) return false;
+        else return true;
+        
+    }
+};

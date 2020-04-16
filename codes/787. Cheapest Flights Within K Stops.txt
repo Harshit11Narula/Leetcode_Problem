@@ -1,0 +1,63 @@
+class Solution {
+public:
+    int findCheapestPrice(int n, vector<vector<int>>& arr, int sr, int ds, int k) {
+        k++;
+        int dp[n][n][k+1] = {0};
+        int const maxval = 1e9;
+        for(int j=0;j<n;j++) for(int i=0;i<n;i++) for(int l=1;l<=k;l++) dp[j][i][l] = maxval;
+        vector<int> adj[n] , temp2[n];
+        map<pair<int , int> , int> mp;
+        for(int j=0;j<arr.size();j++) {
+            dp[arr[j][0]][arr[j][1]][1] = arr[j][2];
+            adj[arr[j][0]].push_back(arr[j][1]);
+             temp2[arr[j][0]].push_back(arr[j][1]);
+            mp[{arr[j][0] , arr[j][1]}] = arr[j][2];
+        }
+        int par = 2;
+        while(par <= k){
+            int cnt = 0;
+            vector<int> temp[n];
+            for(int j=0;j<n;j++){
+                if(temp2[j].size()==0) continue;
+                for(int i=0;i<temp2[j].size();i++){
+                    int val = temp2[j][i];
+                    for(int i1=0;i1<adj[val].size();i1++){
+                        int id = adj[val][i1];
+                        int weight = mp[{val , id}];
+                        
+                        dp[j][id][par] = min(dp[j][id][par] , dp[j][id][par-1]);
+                        if(dp[j][id][par] > dp[j][val][par-1] + weight){
+                            dp[j][id][par] =  dp[j][val][par-1] + weight;
+                            temp[j].push_back(id);
+                        }
+                    }
+                }
+            }
+          
+            bool flag = true;
+            for(int j=0;j<n;j++){
+                temp2[j].clear();
+               
+                for(int i=0;i<temp[j].size();i++) {temp2[j].push_back(temp[j][i]);}
+                temp[j].clear();
+                
+                if(temp2[j].size() > 0) flag = false; 
+            }
+            if(flag) break;
+            
+            par++;
+            
+        }
+        
+        
+        
+        
+        
+              
+        int ans = maxval;
+        for(int j=1;j<=k;j++) ans = min(ans , dp[sr][ds][j]); 
+        if(ans==maxval) ans = -1;
+      return ans;
+                    
+    }
+};

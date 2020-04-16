@@ -1,0 +1,48 @@
+class Solution {
+public:
+    string removeDuplicateLetters(string s) {
+        int dub[26] = {0} , pre[26] = {0};
+
+        for(int j=s.length()-1;j>=0;j--) dub[s.at(j)-'a'] = 1 , pre[s.at(j)-'a']++;
+        
+        string ans = "";
+       int start = 0;
+       while(true){
+           bool flag = true;
+           for(int j=0;j<26;j++) if(dub[j]!=0) flag = false;
+           if(flag) break;
+           int temp[26] = {0};
+           for(int j=0;j<26;j++){
+               if(dub[j]==0) continue;
+               for(int k=0;k<26;k++){
+                   temp[k] = pre[k];
+               }
+               for(int y=0;y<start && y<s.length();y++) temp[s.at(y)-'a']--;
+               bool flag = true;
+               for(int y = start;y<s.length();y++){
+                    if((s.at(y)-'a')==j){
+                        
+                        for(int k=0;k<26;k++){
+                            if(dub[k]!=0 && temp[k]==0)
+                                flag = false;
+                        }
+                        if(flag){
+                            dub[j]=0;
+                            ans+= char(j+'a');
+                            start = y+1;
+                        }
+                         break;
+                  }
+                   temp[s.at(y)-'a']--;
+                   
+               }
+               cout<<start<<"\n";
+               for(int k=0;k<26;k++) if(dub[k]!=0) cout<<char(k+'a')<<" ";
+               cout<<"\n";
+               if(flag) break;
+               
+           }           
+       }
+        return ans;      
+    }
+};

@@ -1,0 +1,19 @@
+class Solution {
+public:
+    bool canCross(vector<int>& stones) {
+        int n=stones.size();
+        vector<vector<unsigned int>> dp(n);
+        dp[0].push_back(0);
+        for (int i=1; i<n; i++)
+            for (int j=i-1; j>=0; j--){
+                unsigned int dt=stones[i]-stones[j];
+                bool chk=0;
+                chk=binary_search(dp[j].begin(),dp[j].end(),dt-1);
+                chk=max(chk,binary_search(dp[j].begin(),dp[j].end(),dt+1));
+                chk=max(chk,binary_search(dp[j].begin(),dp[j].end(),dt));
+                if (chk)
+                    dp[i].push_back(dt);               
+            }
+        return (dp[n-1].size());
+    }
+};

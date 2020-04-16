@@ -1,0 +1,48 @@
+class Solution {
+public:
+    int ans = 0;
+    long long int pow(long long int x , long long int y){
+        long long int r = 1;
+        while(y){
+            if(y%2==1) r = (r*x);
+            x = (x*x);
+            y/=2;
+        }
+        return r;
+    }
+    void fun(vector<long long int>& arr , long long int id, long long int pre){
+        if(id==arr.size()){
+            ans+=pre;
+            return;
+        }
+        long long int temp = arr[id];
+        long long int j;
+        if(id==0) j = 1;
+        else j= 0;
+        for(;j<temp;j++){
+            int space = arr.size() - id - 1;
+            if(j==1) {ans+= pow(10 , space);}
+            ans += (pre)*pow(10 , space);
+            if(space!=0)
+            ans += (space)*pow(10 , space-1);
+        }
+        if(temp==1) pre++;
+        fun(arr , id+1 , pre);
+    }
+    int countDigitOne(int n) {
+        long long int temp = n;
+        vector<long long int> arr;
+        while(temp){
+            arr.push_back(temp%10);
+            temp/=10;
+        }
+        if(arr.size()>=2)
+        ans += (arr.size()-1)*pow(10 , arr.size()-2);
+        
+        reverse(arr.begin() , arr.end());
+        fun(arr , 0 , 0);
+        return ans;
+    }
+};
+
+

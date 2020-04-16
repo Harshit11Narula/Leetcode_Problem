@@ -1,0 +1,12 @@
+#define ll long long int
+ll const mod = 1e9+7;
+class Solution {
+public:
+    int countOrders(int n) {
+        ll ans = 1;
+        for(ll j=2*n;j>=1;j-=2){
+            ans = (ans*((j*(j-1))/2))%mod;
+        }
+        return ans;
+    }
+};

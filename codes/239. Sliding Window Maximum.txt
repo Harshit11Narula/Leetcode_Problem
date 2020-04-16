@@ -1,0 +1,23 @@
+class Solution {
+public:
+    vector<int> maxSlidingWindow(vector<int>& nums, int k) {
+        vector<int> ans;
+        if(nums.size()==0) return ans;
+        int premax[nums.size()];
+        for(int j=0;j<nums.size();j++){
+            if(j%k==0) premax[j] = nums[j];
+            else premax[j] = max(premax[j-1] , nums[j]);
+        }
+        int postmax[nums.size()];
+        postmax[nums.size()-1] = nums[nums.size()-1];
+        for(int j=nums.size()-2;j>=0;j--){
+            if((j+1)%k==0) postmax[j] = nums[j];
+            else postmax[j] = max(postmax[j+1] , nums[j]);
+        }
+        
+        for(int j=0;j<=nums.size()-k;j++){
+            ans.push_back(max(postmax[j] , premax[j+k-1]));
+        }
+        return ans;
+    }
+};

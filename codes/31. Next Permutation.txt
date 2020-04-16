@@ -1,0 +1,41 @@
+class Solution {
+public:
+    void nextPermutation(vector<int>& nums) {
+        int id = -1;
+        for(int j=nums.size()-2;j>=0;j--){
+            if(nums[j] < nums[j+1]){
+                id = j;
+                break;
+            }
+           
+        }
+        if(id==-1){
+            reverse(nums.begin() , nums.end());
+            return;
+        }
+        int val = nums[id];
+        int cnt = 0;
+        int id2 = -1;
+        int diff = INT_MAX;
+        sort(nums.begin() + id , nums.end());
+        for(int j=id;j<nums.size();j++){
+            if(nums[j]==val && cnt==0){
+                cnt = 1;
+                continue;
+            }
+            if(nums[j] > val){
+                if(diff > nums[j]-val){
+                    diff = nums[j]-val;
+                    id2 = j;
+                    
+                }
+            }
+        }
+       val = nums[id2];
+        for(int j=id2;j>id;j--){
+            nums[j] = nums[j-1];
+        }
+        nums[id] = val;
+
+    }
+};

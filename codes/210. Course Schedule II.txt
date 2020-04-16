@@ -1,0 +1,35 @@
+class Solution {
+public:
+    
+    
+    vector<int> findOrder(int n, vector<vector<int>>& arr) {
+        vector<int> order;
+        stack<int> qw;
+        int indegree[n] = {0};
+        vector<int> adj[n];
+        for(int j=0;j<arr.size();j++){
+            indegree[arr[j][0]]++;
+        }
+        for(int j=0;j<n;j++){
+            if(indegree[j]==0)
+                qw.push(j);
+        }
+        while(!qw.empty()){
+            int src = qw.top();
+            qw.pop();
+            order.push_back(src);
+            for(int j=0;j<arr.size();j++){
+                if(arr[j][1] == src ){
+                    indegree[arr[j][0]]--;
+                    if(indegree[arr[j][0]]==0){
+                        qw.push(arr[j][0]);
+                    }
+                }
+            }
+        }
+        if(order.size()!=n) order.clear();
+        return order;
+       
+        
+    }
+};

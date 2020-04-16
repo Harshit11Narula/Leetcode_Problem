@@ -1,0 +1,34 @@
+class Solution {
+public:
+    void update(int idx , int n , int bits[]){
+        idx+=1;
+        while(idx<=n){
+            bits[idx] += 1;
+            idx += (idx & (-idx));
+        } 
+    }
+    int sum(int idx , int n , int bits[]){
+        int sum1 = 0;
+        while(idx>0){
+            sum1 += bits[idx];
+            idx -= (idx & (-idx));
+        }
+        return sum1;
+    }
+    
+    vector<int> countSmaller(vector<int>& nums) {
+        vector<int> ans(nums.size() , 0);
+        vector<pair<int , int> > temp;
+        for(int j=0;j<nums.size();j++) temp.push_back({nums[j] , j+1});
+        sort(temp.begin() , temp.end());
+        int total = 0;
+        int fenwick_tree[nums.size()+2] = {0};
+        for(int j=0;j<temp.size();j++){
+            int idx = temp[j].second;
+            int h = sum(idx, nums.size()+1 , fenwick_tree);
+            ans[idx-1] = j-h;
+            update(idx , nums.size()+1 , fenwick_tree);
+        }
+        return ans;
+    }
+};

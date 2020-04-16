@@ -1,0 +1,91 @@
+#define ll long long int
+class Solution {
+public:
+    long long int mod = 1e9+7;
+    ll rectangleArea(vector<vector<int>>& rectangles) {
+            
+        vector<pair<ll , pair<ll , ll> > > arr;
+        for(int j=0;j<rectangles.size();j++){
+            int x1 = rectangles[j][0] , x2 = rectangles[j][2] , y1 = rectangles[j][1], y2 = rectangles[j][3];
+            arr.push_back({x1 , {y1 , y2}});
+            arr.push_back({x2 , {-y1-1 , y2}});
+        }
+        sort(arr.begin(), arr.end());
+        ll last = -1;
+        unordered_map<ll , vector<ll> > mp;
+        unordered_map<ll , vector<ll> >::iterator i;
+        long long int ans = 0;
+        for(int j=0;j<arr.size();j++){
+            ll x1 = arr[j].first;
+            ll y1 = arr[j].second.first , y2 = arr[j].second.second;
+            if(y1<0){
+                y1 = -(y1+1);
+                if(last!=x1){
+                    vector<pair<ll , ll> > temp;
+                    for(i = mp.begin();i!=mp.end();i++){
+                        for(int p=0;p<(*i).second.size();p++)
+                            temp.push_back({(*i).first , (*i).second[p]});
+                    }
+                    sort(temp.begin() , temp.end());
+                    ll val = INT_MIN;
+                    long long int sum = 0;
+                    for(int p=0;p<temp.size();p++){
+                       // cout<<temp[p].first<<": "<<temp[p].second<<"\n";
+                        val = max(val , temp[p].first);
+                        ll en = temp[p].second;
+                        if(en > val){
+                            sum+= (long long int)(en - val);
+                            sum%=mod;
+                        }
+                        val = max(val , en);
+                    }
+                    
+                    ans += (ll)(x1-last)*(sum);
+                    ans%=mod;
+                    
+                }
+               for (auto i = mp[y1].begin(); i != mp[y1].end(); ++i) { 
+                  if (*i == y2) { 
+                        mp[y1].erase(i); 
+                        break;
+                    } 
+                } 
+                if(mp[y1].size()==0)
+                    mp.erase(y1);
+            }else{
+                if(last!=-1 && last!=x1){
+                    vector<pair<ll , ll> > temp;
+                    for(i = mp.begin();i!=mp.end();i++){
+                        for(int p=0;p<(*i).second.size();p++)
+                            temp.push_back({(*i).first , (*i).second[p]});
+                    }
+                    sort(temp.begin() , temp.end());
+                    ll val = INT_MIN;
+                    ll sum = 0;
+                    for(int p=0;p<temp.size();p++){
+                       // cout<<temp[p].first<<": "<<temp[p].second<<"\n";
+                        val = max(val , temp[p].first);
+                        ll en = temp[p].second;
+                        if(en > val){
+                            sum+= (long long int)(en - val);
+                            sum%=mod;
+                        }
+                        val = max(val , en);
+                    }
+                    
+                   // cout<<sum<<" "<<(x1-last)<<" ---\n";
+                    ans += (ll)(x1-last)*(sum);
+                    ans%=mod;
+                }
+               
+                 mp[y1].push_back(y2);
+            }
+           // cout<<ans<<" "<<x1<<"\n";
+             last = x1;
+        }
+        
+        
+        return ans;
+        
+    }
+};

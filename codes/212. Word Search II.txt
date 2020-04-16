@@ -1,0 +1,47 @@
+class Solution {
+public:
+    string temp;
+    int arr[100][100] = {0};
+    bool fun(int x , int y , int id, vector<vector<char>>& board , int cnt){
+      //  cout<<x<<" "<<y<<"\n";
+        
+        if(board[x][y] != temp.at(id)) return false;
+       // cout<<id<<" "<<temp.length()-1<<"\n";
+        if(id==temp.length()-1) return true;
+        arr[x][y] = cnt;
+        if(x-1>=0 && arr[x-1][y]!=cnt && fun(x-1 , y , id+1 , board, cnt)) return true;
+        if(y-1>=0 && arr[x][y-1]!=cnt && fun(x , y-1 , id+1 , board, cnt)) return true;
+        if(x+1<board.size() && arr[x+1][y]!=cnt && fun(x+1 , y , id+1 , board,cnt)) return true;
+        if(y+1<board[0].size() && arr[x][y+1]!=cnt && fun(x , y+1 , id+1 , board,cnt)) return true;
+        arr[x][y] = cnt-1;
+        return false;
+    }
+    
+    
+    
+    vector<string> findWords(vector<vector<char>>& board, vector<string>& words) {
+        
+        vector<string> ans;
+        int cnt = 2;
+        for(int j=0;j<words.size();j++){
+             temp = words[j];
+            bool out = false;
+            for(int p=0;p<board.size();p++){
+                for(int q = 0;q<board[0].size();q++){
+                    if(board[p][q]==temp.at(0)){
+                        cnt++;
+                        if(fun(p, q ,0, board , cnt))
+                        {
+                            ans.push_back(temp);
+                            out = true;
+                            break;
+                        }
+                        
+                    }
+                }
+                if(out) break;
+            }
+        }
+        return ans;
+    }
+};

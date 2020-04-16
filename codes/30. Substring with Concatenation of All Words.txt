@@ -1,0 +1,48 @@
+class Solution {
+public:
+    vector<int> findSubstring(string s, vector<string>& words) {
+      
+        vector<int> ans;
+          if(s.length()==0 || words.size()==0) return ans;
+        map<string , int> mp;
+        int sum = 0, total = 0 , size = words[0].length();
+        for(int j=0;j<words.size();j++){
+            mp[words[j]]++;
+            total+=words[j].length();
+            for(int i=0;i<words[j].length();i++)
+                sum+= words[j][i]*50;
+        }
+        cout<<sum<<"\n";
+        int req = 0;
+        for(int j=0;j<s.length() -total+1 ;j++){
+           // cout<<j<<" ";
+            string sr= s.substr(j , total);
+            if(j==0){
+                for(int i=0;i<total;i++) req += 50*s.at(i);
+            }else{
+                req -= 50*s.at(j-1);
+                req += 50*s.at(j+total-1);
+            }
+           // cout<<req<<"\n";
+            if(req==sum){
+              //  cout<<sr<<" "<<j<<"\n";
+                int st = j;
+                int cnt = 0;
+                vector<string> arr;
+                while(st+size<=s.length() && mp.find(s.substr(st , size))!=mp.end()){
+                    if(mp[s.substr(st ,size)]==0) break;
+                    cnt++;
+                    mp[s.substr(st ,size)]--;
+                    arr.push_back(s.substr(st ,size));
+                    st+=size;
+                }
+                
+                if(cnt==words.size()){
+                    ans.push_back(j);
+                }
+                for(int i=0;i<arr.size();i++) mp[arr[i]]++;
+            }            
+        }
+      return ans; 
+    }
+};

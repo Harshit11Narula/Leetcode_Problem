@@ -1,0 +1,32 @@
+#include <ext/pb_ds/assoc_container.hpp> 
+#include <ext/pb_ds/tree_policy.hpp> 
+using namespace __gnu_pbds; 
+#define ordered_set tree<pair<long long int , int>, null_type,less<pair<long long int ,int> >, rb_tree_tag,tree_order_statistics_node_update
+    > 
+  
+class Solution {
+public:
+    ordered_set mp;
+    
+     int cal(long long int val){
+        int st = 0 , en = mp.size()-1;
+        while(en>=st){
+            int mid = (st+en)/2;
+            pair<long long int,int> temp = *(mp.find_by_order(mid));
+            if(temp.first<val) st = mid+1;
+            else en = mid-1;
+        }
+        return st;
+    }
+    
+    
+    
+    int reversePairs(vector<int>& nums) {
+       int ans = 0;
+        for(int j=nums.size()-1;j>=0;j--){
+            ans+= (long long int)cal(nums[j]);
+            mp.insert({(long long int)2*(long long int)nums[j],j});
+        }
+        return ans;
+    }
+};

@@ -1,0 +1,62 @@
+class Solution {
+public:
+    vector<int> adj[10001];
+   int result[10001] = {0};
+    int visited[10001]={0};
+    int stk[10001] = {0};
+    bool dfs(int src , int id){
+    if(result[src]==1) return true;
+        if(result[src]==-1) return false;
+    if(visited[src]!=id){
+        visited[src] = id;
+        stk[src] = id;
+      
+        for(int j=0;j<adj[src].size();j++){
+            int v = adj[src][j];
+            if(stk[v]==id){
+                result[v] = 1;
+                return true;
+            }else{
+                if(visited[v]==id) {
+                    continue;
+                }
+                if(dfs(v , id)) {
+                    result[v] = 1;
+                    return true;
+                }else{
+                    result[v] = -1;
+                }
+            }
+        }
+    }
+        stk[src] = -1;    
+        return false;
+    }
+   
+    
+    
+    vector<int> eventualSafeNodes(vector<vector<int>>& graph) {
+        for(int j=0;j<graph.size();j++){
+            for(int i=0;i<graph[j].size();i++){
+                adj[j].push_back(graph[j][i]);
+                if(graph[j][i]==j) result[j] = 1;
+            }
+            visited[j]=false;
+            stk[j] = false;
+      }
+        vector<int> final_ans;
+        for(int j=0;j<graph.size();j++){
+           if(result[j]==1 || result[j] == -1) continue;
+            if(dfs(j , j+1)){
+               result[j] = 1;
+           }else{
+                result[j] = -1;
+            }
+        }
+        for(int j=0;j<graph.size();j++){
+            if(result[j]==-1) final_ans.push_back(j);
+        }
+        
+        return final_ans;
+    }
+};

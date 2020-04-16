@@ -1,0 +1,69 @@
+#define ll long long int
+class Solution{
+public:
+
+    bool check(ll x , ll y){
+        if(log10((double)x) + log10((double)y) > 18.0) return true;
+        else return false;
+    }
+
+    ll sum(ll n , ll p){
+        ll ans = 0 ,temp = 1;
+        for(int j=0;j<=p;j++){
+            ans += temp;
+            if(j==p) break;
+           // cout<<ans<<" "<<temp<<"\n";
+            if(ans > 1e18) return (1e18+1e17);
+            if(check(n , temp)) return (1e18+1e17);
+            temp*=n;
+        }
+        return ans;
+    }
+
+    ll fun(ll n , ll p){
+        ll minval = 2 , maxval = n;
+        while(maxval >= minval){
+            ll midval = (maxval + minval) / (ll)2;
+            ll val = sum(midval , p);
+            //cout<<midval<<" "<<val<<" "<<n<<"\n";
+            if(val==n) return midval;
+            if(val > n) maxval = midval - 1;
+            else minval = midval + 1;
+        }
+        return -1;
+    }
+
+
+
+     string smallestGoodBase(string nstr) {
+         ll number = 0;
+         for(int j=0;j<nstr.length();j++){
+            ll idx = nstr.at(j) - '0';
+            number = number*(ll)10 + idx;
+         }
+         ll p  = 0 , temp = number;
+         while(temp){
+             p++;
+             temp/=(ll)2;
+         }
+         ll ans = 0;
+       
+         for(int j=p-1;j>=1;j--){
+             ll val = fun(number , j);
+             if(val==-1) continue;
+           //  cout<<j<<"\n";
+             ans = val;
+             break;
+         }
+         string r = "";
+         while(ans){
+             ll idx = ans%(ll)10;
+             ans/=(ll)10;
+             r = char(idx + '0') + r;
+         }
+         return r;
+     }
+};
+    
+    
+    

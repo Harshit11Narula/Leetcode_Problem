@@ -1,0 +1,7 @@
+class Solution {
+public:
+    int singleNumber(vector<int>& nums) {
+        for(int j=1;j<nums.size();j++) nums[j] = nums[j] ^ nums[j-1];
+        return nums[nums.size()-1];
+    }
+};

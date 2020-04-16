@@ -1,0 +1,33 @@
+class Solution {
+public:
+    bool isScramble(string s1, string s2) {
+        if(s1.length()!=s2.length()) return false;
+        if(s1==s2) return true;
+        
+        int temp1[26] ={0};
+        int temp2[26] = {0};
+        for(int j=0;j<s1.length();j++) temp1[s1.at(j)-'a']++;
+        for(int j=0;j<s2.length();j++) temp2[s2.at(j)-'a']++;
+        for(int j=0;j<26;j++) if(temp1[j]!=temp2[j]) return false;
+        
+        for(int j=1;j<s1.length();j++){
+            string p1 = s1.substr(0 , j);
+            string p2 = s1.substr(j);
+            string p3 = s2.substr(0 , j);
+            string p4 = s2.substr(j);
+            string p5  = s1.substr(0 , s1.length()-j);
+            string p6 = s1.substr(s1.length()-j);
+            string p7 = s2.substr(0 , s2.length()-j);
+            string p8 = s2.substr(s2.length()-j);
+            if(isScramble(p1 , p3) && isScramble(p2 , p4)) 
+                return true;
+            if(isScramble(p1 , p8) && isScramble(p2 , p7)) 
+                return true;
+            if(isScramble(p6 , p3) && isScramble(p5 , p4)) 
+                return true;
+            if(isScramble(p6 , p8) && isScramble(p5 , p7)) 
+                return true;
+        }
+        return false;
+    }
+};

@@ -1,0 +1,28 @@
+class Solution {
+public:
+    int minTaps(int n, vector<int>& ranges) {
+        
+        
+        
+        
+        vector<int> arr(n+1 , 0);
+        for(int j=0;j<ranges.size();j++){
+            if(ranges[j]==0) continue;
+            int st = max(j - ranges[j]+1 , 0);
+            int en = min(j + ranges[j] , n);
+            int val = en - st+1;
+            for(int i= st;i<=en;i++){
+                arr[i] = max(arr[i] , val);
+                val--;
+            }
+        }
+        int begin = 1;
+        int cnt =0 ;
+        while(begin<=n){
+            if(arr[begin]==0) return -1;
+            cnt++;
+            begin += arr[begin];
+        }
+        return cnt;
+    }
+};

@@ -1,0 +1,19 @@
+class Solution {
+public:
+    int findMinMoves(vector<int>& arr) {
+        int sum = 0;
+        for(int j=0;j<arr.size();j++) sum+=arr[j];
+        if(sum%(arr.size())!=0) return -1;
+        sum = sum/(arr.size());
+        int ans = 0;
+        int req = 0;  
+        for(int j=0;j<arr.size();j++){
+            if(arr[j] > sum){
+                ans = max(ans , abs(arr[j] - sum));   
+            }
+            req += arr[j] - sum;
+            ans = max(ans , abs(req));
+        }
+        return ans;
+    }
+};

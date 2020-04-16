@@ -1,0 +1,14 @@
+class Solution {
+public:
+    int subarraysWithKDistinct(vector<int>& arr, int K) {
+        vector<int> mp(arr.size()+1);
+        int ans =0;
+        for(int i=0, j =0 , prefix = 0 , cnt = 0; i < arr.size();i++){
+           if(mp[arr[i]]++ == 0) cnt++;
+            if(cnt > K) mp[arr[j++]]-- , cnt-- , prefix = 0;
+            while(mp[arr[j]] > 1) prefix++ , mp[arr[j++]]--;
+            if(cnt== K) ans += (prefix+1);
+        }
+        return ans;
+    }
+};

@@ -1,0 +1,46 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<int> arr;
+    int idx;
+    void dfs(TreeNode*  node){
+        if(node==NULL) return;
+        dfs(node->left);
+        arr.push_back(node->val);
+        dfs(node->right);
+    }
+    void dfs2(TreeNode* node){
+        if(node==NULL) return;
+        dfs2(node->left);
+        node->val = arr[idx];
+        idx++;
+        dfs2(node->right);
+    }
+    
+    void recoverTree(TreeNode* root) {
+        TreeNode* temp = root;
+        dfs(temp);
+        idx = 0;
+        for(int j=0;j<arr.size();j++){
+            int val1 = arr[j];
+            int k = j+1;
+            while(k<arr.size() && val1 > arr[k]) k++;
+            k--;
+            swap(arr[j] , arr[k]); 
+        }
+        
+        
+        
+        
+    
+        dfs2(root); 
+    }
+};

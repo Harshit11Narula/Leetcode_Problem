@@ -1,0 +1,38 @@
+#define ll long long int
+int fast[200000002];
+class Solution {
+public:
+   
+    int off = 100000000;
+    
+    int numSubmatrixSumTarget(vector<vector<int>>& arr, int target) {
+        
+        int n = arr.size();
+        int m = arr[0].size();
+        int prefix[n][m];
+        for(int j=0;j<n;j++){
+            prefix[j][0] = arr[j][0];
+            for(int i=1;i<m;i++)
+                prefix[j][i] = prefix[j][i-1] + arr[j][i];
+        }
+        int ans = 0;
+        for(int j=0;j<m;j++){
+            for(int i=j;i<m;i++){
+                int sum = 0;
+                for(int k=0;k<n;k++){
+                    sum+=(prefix[k][i] - (j!=0?prefix[k][j-1]:0));
+                    if(sum==target) ans++;
+                    ans+= fast[sum-target+off];
+                    fast[sum+off]++;
+                }
+                sum = 0;
+                for(int k=0;k<n;k++){
+                    sum+=(prefix[k][i] - (j!=0?prefix[k][j-1]:0));
+                    fast[sum+off]--;
+                }
+                
+            }
+        }
+        return ans;
+    }
+};

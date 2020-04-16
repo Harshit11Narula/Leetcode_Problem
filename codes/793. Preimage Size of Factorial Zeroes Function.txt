@@ -1,0 +1,40 @@
+#define ll long long 
+class Solution {
+public:
+    
+    ll cal(ll val){
+        ll ans = 0;
+        ll pw = 5;
+        while(pw<=val){
+            ans+=(val/pw);
+            pw*=5;
+        }
+        
+        return ans;
+    }
+    
+    
+    int preimageSizeFZF(ll k) {
+        ll maxval = -1;
+        ll st = 0 , en = 10*k+10;
+        
+        while(en>=st){
+            ll mid = (st+en)/2;
+            ll val = cal(mid);
+            if(val==k) maxval = mid;
+            if(val>k) en = mid-1;
+            else st = mid+1;
+        }
+        ll minval = -1;
+        st = 0 , en = 10*k+10;
+        while(en>=st){
+            ll mid = (st+en)/2;
+            ll val = cal(mid);
+            if(val==k) minval = mid;
+            if(val<k) st = mid+1;
+            else en = mid-1;
+        }
+        if(maxval==-1) return 0;
+        return maxval - minval + 1;
+    }
+};

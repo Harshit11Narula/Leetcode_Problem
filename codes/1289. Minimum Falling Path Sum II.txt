@@ -1,0 +1,58 @@
+class Solution {
+public:
+    int minFallingPathSum(vector<vector<int>>& arr) {
+        int n = arr.size();
+        int m = arr[0].size();
+        vector<vector<int> > dp(n , vector<int>(m , INT_MAX));
+        pair<int, int> min1 = {INT_MAX , -1} , min2 = {INT_MAX , -1};
+        
+        for(int j=0;j<m;j++){
+            dp[n-1][j] = arr[n-1][j];
+            if(dp[n-1][j] < min2.first){
+                if(dp[n-1][j] <= min1.first){
+                    min2 = min1;
+                    min1 = {dp[n-1][j] , j};
+                }else 
+                    min2 = {dp[n-1][j] , j};
+            }            
+            
+        }
+        
+        
+        
+        
+        for(int j=n-2;j>=0;j--){
+           //    cout<<min1.first<<" "<<min1.second<<" "<<min2.first<<" "<<min2.second<<"\n";
+            
+                for(int i=0;i<m;i++){
+                
+                    if(min1.second==i){
+                        dp[j][i] = arr[j][i] + min2.first;
+                    }else{
+                        dp[j][i] = arr[j][i] + min1.first;
+                    }
+                 //   cout<<dp[j][i]<<" ";
+                }
+           
+                min1 = {INT_MAX , -1};
+                min2 = {INT_MAX , -1};
+            
+                for(int i=0;i<m;i++){
+                     if(dp[j][i] < min2.first){
+                        if(dp[j][i] <= min1.first){
+                            min2 = min1;
+                            min1 = {dp[j][i] , i};
+                        }else 
+                            min2 = {dp[j][i] , i};
+                    }
+                }
+            
+            
+        }
+        int ans = INT_MAX;;
+        for(int j=0;j<m;j++) ans = min(ans , dp[0][j]);
+        
+        return ans;
+        
+    }
+};

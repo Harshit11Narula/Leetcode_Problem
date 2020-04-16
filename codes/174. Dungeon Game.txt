@@ -1,0 +1,51 @@
+class Solution {
+public:
+    int calculateMinimumHP(vector<vector<int>>& arr) {
+        int n = arr.size();
+        int m = arr[0].size();
+        int minval = 1 , maxval = 1e4;
+        int ans = -1;
+        while(maxval>=minval){
+            int mid = (maxval + minval)/2;
+            vector<vector<int> > dp(n , vector<int>(m , INT_MIN));
+            dp[0][0] = mid + arr[0][0];
+            if(dp[0][0]<=0) dp[0][0] = INT_MIN;
+            for(int j=1;j<m;j++){
+                if(dp[0][j-1]!=INT_MIN)
+                    dp[0][j] = arr[0][j] + dp[0][j-1]; 
+                if(dp[0][j]<=0)
+                    dp[0][j] = INT_MIN;
+            }
+                
+            for(int j=1;j<n;j++){
+                if(dp[j-1][0]!=INT_MIN)
+                    dp[j][0] = dp[j-1][0] + arr[j][0];
+                if(dp[j][0]<=0)
+                    dp[j][0] = INT_MIN;
+                for(int i=1;i<m;i++){
+                    if(dp[j-1][i]!=INT_MIN)
+                         dp[j][i] = max(dp[j-1][i] + arr[j][i] , dp[j][i]);
+                    
+                    if(dp[j][i-1]!=INT_MIN)
+                        dp[j][i] = max(dp[j][i] , dp[j][i-1] + arr[j][i]);
+                    
+                    if(dp[j][i]<=0)
+                        dp[j][i] = INT_MIN;
+                    
+                }
+                
+            }
+            if(dp[n-1][m-1]!=INT_MIN){
+                ans = mid;
+             //   cout<<ans<<"\n";
+                maxval = mid-1;
+            }else{
+                minval = mid+1;
+             }
+
+        }
+        return ans;
+        
+        
+    }
+};

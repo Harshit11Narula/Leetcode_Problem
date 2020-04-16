@@ -1,0 +1,18 @@
+class Solution {
+public:
+    int minSwapsCouples(vector<int>& row) {
+        int ans = 0;
+        for(int j=0;j<row.size();j+=2){
+            if(row[j+1]==(row[j] ^ 1)) continue;
+            for(int i=j+2;i<row.size();i++){
+                if((row[j] ^ 1)==row[i]){
+                    swap(row[j+1] , row[i]);
+                    ans++;
+                }
+            }
+        }
+        return ans;
+        
+        
+    }
+};

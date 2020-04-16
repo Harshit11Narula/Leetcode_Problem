@@ -1,0 +1,74 @@
+#define ll long long int
+class Solution {
+public:
+    ll const mod = 1e9+7;
+    int numDecodings(string s) {
+        int n = s.length();
+        if(n==0) return 0;
+        vector<ll> dp(n+1 , 0);
+        if(s.at(0)=='0') return 0;
+        if(s.at(0)=='*')
+            dp[0] = 9;
+        else
+            dp[0] = 1;
+        
+        
+        
+        
+
+        for(int j=1;j<s.length();j++){  
+            if(s.at(j)=='0'){
+                if(s.at(j-1)=='*'){
+                    ll val =  numDecodings(s.substr(j+1));
+                    if(j+1==s.length()) val = 1;
+                    if(j-2>=0)
+                        return (2*dp[j-2]*val)%mod;
+                    else
+                        return (2*val)%mod;
+                }else{
+                    if(s.at(j-1)>'2') return 0;
+                    else{
+                        ll val =  numDecodings(s.substr(j+1));
+                        if(j+1==s.length()) val = 1;
+                        if(j-2>=0)
+                        return (dp[j-2]*val)%mod;
+                     else
+                        return (val)%mod;
+                    } 
+            
+                }
+       
+            }
+            
+            
+            if(s.at(j)=='*'){
+                if(s.at(j-1)=='*'){
+                    dp[j] = ((ll)9*dp[j-1] + (ll)15*(j-2>=0?dp[j-2]:1))%mod;
+                }else if(s.at(j-1)=='1'){
+                    dp[j] = ((ll)9*dp[j-1] + (ll)9*(j-2>=0?dp[j-2]:1))%mod;
+                }else if(s.at(j-1)=='2'){
+                    dp[j] = ((ll)9*dp[j-1] + (ll)6*(j-2>=0?dp[j-2]:1))%mod;
+                }else{
+                    dp[j] = ((ll)9*dp[j-1])%mod;
+                }
+            }else{
+                if(s.at(j-1)=='*'){
+                    if(s.at(j)<='6'){
+                        dp[j] = (dp[j-1] + 2*(j-2>=0?dp[j-2]:1))%mod;
+                    }else{
+                        dp[j] = (dp[j-1] + (j-2>=0?dp[j-2]:1))%mod;
+                    }     
+                }else if(s.at(j-1)=='1' || (s.at(j-1)=='2' && s.at(j)<='6')){
+                    dp[j] = (dp[j-1] + (j-2>=0?dp[j-2]:1))%mod;
+                }else 
+                    dp[j] = dp[j-1];
+ 
+            }
+          //  cout<<dp[j]<<" ";
+        }
+        
+        return dp[n-1]%mod;
+        
+        
+    }
+};

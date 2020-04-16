@@ -1,0 +1,87 @@
+
+
+
+class Solution {
+public:    
+    
+    map<int , int> mp;
+    bool flag = true;
+    vector<int> adj[1001];
+    void dfs(int src , int visited[] , int par){
+        visited[src]++;
+        for(int j=0;j<adj[src].size();j++){
+            int v = adj[src][j];
+            if(visited[v]==1){
+                if(v!=par)
+                    flag = true;
+            }else
+                dfs(v , visited , src);
+        }
+        
+    }
+    
+    
+    bool check(int idx , vector<vector<int>>& arr){
+        int n = arr.size();
+        
+        int srcstart[n+1] = {0};
+        int par[n+1] = {0};
+        for(int j=0;j<arr.size();j++){
+            if(j==idx) continue;
+            int u = arr[j][0];
+            int v = arr[j][1];
+            adj[u].push_back(v);
+            par[u] = v;
+            if(par[v]==u) return false;
+        }
+        int visited[n+1] = {0}; 
+        for(int j=1;j<=n;j++){
+            if(srcstart[j]==0 || visited[j]==1) continue;
+            dfs(j , visited , -1);
+        }
+       if(flag)   return true;
+        else return false;
+    }
+
+    
+    vector<int> findRedundantDirectedConnection(vector<vector<int>>& arr) {    
+        int n = arr.size();
+        int par[n+1] = {0};
+        vector<int> ans;
+        int temp[n+1] = {0};
+        for(int k=0;k<arr.size();k++){
+            int u = arr[k][0];
+            int v = arr[k][1];
+            temp[u]++;
+            temp[v]++;
+        }
+        for(int k=0;k<arr.size();k++){
+            int u = arr[k][0];
+            int v = arr[k][1];
+            if(par[v]!=0){
+                if(temp[u]!=1 && temp[v]!=1 && check(k , arr)){
+                    ans.push_back(u);
+                    ans.push_back(v);
+                }else{
+                    ans.push_back(par[v]);
+                    ans.push_back(v);
+                }
+            }
+            par[v] = u;
+        }
+        if(ans.size()==0){
+            for(int j=n-1;j>=0;j--){
+                int u = arr[j][0];
+                int v = arr[j][1];
+                if(temp[u]==1 || temp[v]==1) continue;
+                ans.push_back(u);
+                ans.push_back(v);
+                break;
+            }
+        }
+        return ans;
+        
+        
+        
+    }
+};

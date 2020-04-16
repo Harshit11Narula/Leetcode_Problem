@@ -1,0 +1,30 @@
+class Solution {
+public:
+    int carFleet(int target, vector<int>& position, vector<int>& speed) {
+        if(position.size()==0) return 0; // no car
+        
+        
+        
+        vector<pair<int , double> > arr; // Pair class Arraylist  1.position 2.time
+        
+        for(int j=0;j<speed.size();j++){
+            arr.push_back({position[j] ,(double)(target - position[j])/(double) speed[j]});
+        }
+        sort(arr.begin() , arr.end());  // position basis
+        
+        int cnt = 0; // total no of cars reached
+    
+        pair<int , double> last = arr[arr.size()-1];   // last car
+        
+        
+        
+        for(int j=arr.size()-2;j>=0;j--){ //  
+            if(arr[j].second > last.second){
+                last = arr[j];
+                cnt++;
+            }
+        }
+        return cnt+1;
+       
+    }
+};

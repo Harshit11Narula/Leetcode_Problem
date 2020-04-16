@@ -1,0 +1,52 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+int const maxval = 1e9;
+class Solution {
+public:
+    int ans = 0;
+    int dfs(TreeNode* root){
+        if(root == NULL) return 0;
+        int l = dfs(root->left);
+        int r = dfs(root->right);
+        int sum = root->val;
+      //  cout<<root->val<<" ";
+        if(root->left!=NULL){
+           // cout<<"left -> "<<root->left->val<<", ";
+            if(root->left->val < root->val && l !=1e9 ){
+                sum+=l;
+            }else{
+                sum = 1e9;
+            }
+        }
+        
+      //  cout<<sum<<" ";
+        if(root->right!=NULL){
+          //  cout<<"right -> "<<root->right->val<<", ";
+            if(sum!=1e9 && root->right->val > root->val && r!=1e9){
+                sum+=r;
+            }else{
+                sum=1e9;
+            }
+        }
+       
+       // cout<<sum<<"\n";
+        if(sum!=1e9)
+        ans = max(ans , sum);
+        
+        return sum;
+    }
+    
+    
+    
+    int maxSumBST(TreeNode* root) {
+        dfs(root);
+        return ans;
+    }
+};

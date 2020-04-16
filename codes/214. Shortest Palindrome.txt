@@ -1,0 +1,37 @@
+class Solution {
+public:
+    string temp;
+    int cnt = 0;
+    int hash[50000];
+    bool fun(int st , int en){
+        if(hash[en/2]!=(hash[en]-hash[(en+1)/2])) return false;
+        string qw = temp.substr(0 , en/2);
+        reverse(qw.begin() , qw.end());
+        if(qw == temp.substr((en+1)/2 , en/2))  return true;      
+        else return false;
+    }
+    string shortestPalindrome(string s) {
+        int n = s.length();
+        if(n==0) return "";
+        
+        string ans = "";
+        temp = s;
+        hash[0] = 0;
+        for(int j=1;j<=n;j++){
+            hash[j] = hash[j-1] + s.at(j-1);
+        }
+
+        for(int j=n;j>=1;j--){
+          
+            if(fun(1 , j)){
+                for(int i=n;i>j;i--){
+                    ans += s.at(i-1);
+                }
+                for(int i=1;i<=j;i++) ans+=s.at(i-1);
+                for(int i=j+1;i<=n;i++) ans+=s.at(i-1);
+                return ans;
+            }
+        }
+    return ans;       
+    }
+};

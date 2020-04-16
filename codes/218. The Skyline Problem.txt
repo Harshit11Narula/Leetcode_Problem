@@ -1,0 +1,104 @@
+class Solution {
+public:
+   
+    int tree[200000];
+    void build(int st, int en , int pos){
+        if(st==en){
+            tree[pos]=0;
+            return;
+        }
+        int mid = (st+en)/2;
+        build(st , mid , 2*pos+1);
+        build(mid+1 , en , 2*pos+2);
+    }
+    int query(int st , int en , int qs ,int qe, int pos){
+        if(st>qe || qs>en) return 0;
+        if(st>=qs && en<=qe) return tree[pos];
+        int mid = (st+en)/2;
+        return max(query(st , mid , qs ,qe , 2*pos+1) , query(mid+1 , en , qs , qe , 2*pos+2));
+    }
+    void update(int st , int en , int i , int pos, int val){
+        if(i>en || i<st) return ;
+        if(st==en){
+            tree[pos] = val;
+            return;
+        }
+        int mid = (st+en)/2;
+        update(st , mid , i , 2*pos+1 , val);
+        update(mid+1 , en ,i , 2*pos+2 , val);
+        tree[pos] = max(tree[2*pos+1] , tree[2*pos+2]);
+    }
+
+    vector<vector<int>> getSkyline(vector<vector<int>>& qw) {
+        vector<vector<int> > ans;
+        int n = qw.size();
+        vector<pair<int , pair<int , int > > > arr[200000];
+        vector<pair<int , int> > pq;
+        unordered_map<int , int> pts;
+        int cnt  = 0;
+        for(int j=0;j<n;j++){
+            
+            if(pts.find(qw[j][0]) == pts.end()){
+                pq.push_back({qw[j][0] , cnt});
+                pts[qw[j][0]] = cnt;
+                arr[cnt].push_back( {1 , {j,qw[j][2]}});
+                cnt++;
+            }else{
+                int val = pts[qw[j][0]];
+                arr[val].push_back( {1 , {j,qw[j][2]}} );
+            }
+            if(pts.find(qw[j][1]) == pts.end()){
+                pq.push_back({qw[j][1] , cnt});
+                pts[qw[j][1]] = cnt;
+                arr[cnt].push_back( {2 , {j,qw[j][2]}});
+                cnt++;
+            }else{
+                int val = pts[qw[j][1]];
+                arr[val].push_back( {2 , {j,qw[j][2]}} );
+            }
+        }
+        sort(pq.begin() , pq.end());
+        unordered_map<int , int> mp;
+        for(int j=0;j<pq.size();j++){
+            int idx = pq[j].second;
+             int pnt =pq[j].first;
+            int now_max = query(0 , n-1 , 0, n-1 , 0);
+            for(int i=0;i<arr[idx].size();i++){
+               
+                int up_down = arr[idx][i].first;
+                 int ind = arr[idx][i].second.first;
+                 int height = arr[idx][i].second.second;
+         
+                    if(up_down==1)                   
+                         update(0 , n-1 , ind , 0 , height);
+                    else
+                        update(0 , n-1 , ind , 0 , 0);
+             }
+            
+                int after_max = query(0 , n-1 , 0, n-1 , 0);
+        
+                if(now_max==after_max){
+                    continue;
+                }else{
+                    mp[pnt] = max(mp[pnt] , after_max);
+                } 
+           
+        }
+        unordered_map<int , int>::iterator k;
+        vector<pair<int , int> > for_sort;
+        for(k = mp.begin();k!=mp.end();k++){
+            for_sort.push_back({(*k).first , (*k).second});
+        }
+        sort(for_sort.begin() , for_sort.end());
+        for(int j=0;j<for_sort.size();j++){
+            int x = for_sort[j].first;
+            int h = for_sort[j].second;
+            vector<int> temp;
+            temp.push_back(x);
+            temp.push_back(h);
+            ans.push_back(temp);
+        }
+        return ans;
+        
+    }
+};

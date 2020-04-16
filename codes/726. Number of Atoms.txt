@@ -1,0 +1,75 @@
+class Solution {
+public:
+    string countOfAtoms(string s) {
+        map<string  , int> mp;
+        stack<int> st;
+        int temp[1005] = {0};
+        for(int j=0;j<s.length();j++){
+            if(s.at(j)=='(') st.push(j);
+            if(s.at(j)==')'){
+                int idx = j;
+                int val = 0;
+                while(j+1 < s.length() && s.at(j+1)>='0' && s.at(j+1)<='9') val =val*10 + s.at(j+1) - '0' , j++;
+                if(val==0) val = 1; 
+                temp[idx] = val;
+                temp[st.top()] = val;
+                st.pop();
+            }
+        }
+        int val = 1;
+        string ele = "";
+        for(int j=0;j<s.length();){
+            if(s.at(j)=='('){
+                val*=temp[j];
+                j++;
+                continue;
+            }
+            if(s.at(j)==')'){
+                val/=temp[j];
+                j++;
+                while(j<s.length() && s.at(j)>='0' && s.at(j)<='9') j++;
+                continue;
+            }
+            
+            if(s.at(j)>='A' && s.at(j)<='Z'){
+                
+                ele = s.at(j);
+                j++;
+                while(j<s.length() && s.at(j)>='a' && s.at(j)<='z') ele+=s.at(j) , j++;
+                
+                cout<<ele<<"\n";
+                int q = 0;
+                while(j<s.length() && s.at(j)>='0' && s.at(j)<='9'){
+                    q = 10*q + (s.at(j)-'0');
+                    j++;
+                }
+                if(q==0) q = 1;
+                mp[ele] += val*q;
+            }
+            
+            
+        }
+        
+        vector<pair<string , int> > arr;
+        for(auto it=mp.begin();it!= mp.end();++it){
+            arr.push_back({(*it).first , (*it).second});
+        }
+        sort(arr.begin() , arr.end());
+        string ans = "";
+        for(int j=0;j<arr.size();j++){
+            ans += arr[j].first;
+            if(arr[j].second==1) continue;
+            string sval = "";
+            int temp = arr[j].second;
+            while(temp){
+                int d = temp%10;
+                temp/=10;
+                sval  = char(d + '0') + sval;
+            }
+            ans+=sval;
+        }
+        return ans;
+        
+
+    }
+};

@@ -1,0 +1,34 @@
+class Solution {
+public:
+    vector<vector<int>> insert(vector<vector<int>>& arr, vector<int>& d) {
+       vector<vector<int>> ans;
+       vector<pair<int,  int> > temp;
+        for(int j=0;j<arr.size();j++){
+            temp.push_back({arr[j][0] , 1});
+            temp.push_back({arr[j][1] , 2});
+        }
+        temp.push_back({d[0] , 1});
+        temp.push_back({d[1] , 2});
+        int cnt = 0;
+        sort(temp.begin(), temp.end());
+        int st = INT_MAX , en = -1;
+        for(int j=0;j<temp.size();j++){
+            if(temp[j].second==2){
+                en = temp[j].first;
+                cnt--;
+                if(cnt==0){
+                vector<int> temp2;
+                temp2.push_back(st);
+                temp2.push_back(en);
+                ans.push_back(temp2);
+                st = INT_MAX;
+                }
+            }else{
+                cnt++;
+                st = min(st , temp[j].first);
+            }
+        }
+        
+        return ans;
+    }
+};

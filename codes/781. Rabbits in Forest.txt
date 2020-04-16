@@ -1,0 +1,20 @@
+class Solution {
+public:
+    int numRabbits(vector<int>& answer) {
+        map<int , int> mp;
+        for(int j=0;j<answer.size();j++){
+                mp[answer[j]]++;
+        }
+        int sum = 0;
+        map<int , int>::iterator i;
+        for(i = mp.begin();i!=mp.end();i++) {
+            if((*i).first==0) {sum+=(*i).second;continue;}
+            int val = (*i).second + (*i).first;
+            val/=((*i).first+1);
+            val*=((*i).first+1);
+            sum+=val;
+        }
+        return sum;
+        
+    }
+};

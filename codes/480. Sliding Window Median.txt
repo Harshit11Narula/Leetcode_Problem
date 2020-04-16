@@ -1,0 +1,104 @@
+class Solution {
+    
+    priority_queue<int> max_heap;
+    priority_queue<int, vector<int>, greater<int>> min_heap;
+    
+    void addNum(int num) {
+        if (max_heap.size() == 0){
+            max_heap.push(num);
+        } else {
+            int t = max_heap.top();
+            if (num > t)
+                min_heap.push(num);
+            else
+                max_heap.push(num);
+            int max_size, min_size;
+            max_size = max_heap.size();
+            min_size = min_heap.size();
+            if (abs(max_size - min_size) >1){
+                if (max_size > min_size){
+                    int t = max_heap.top();
+                    max_heap.pop();
+                    min_heap.push(t);
+                } else {
+                    int t = min_heap.top();
+                    min_heap.pop();
+                    max_heap.push(t);
+                }
+            }
+        }
+    }
+    
+    double findMedian() {
+        int max_size = max_heap.size();
+        int min_size = min_heap.size();
+        if (max_size == min_size){
+            double ans;
+            ans = double(max_heap.top()) + double(min_heap.top());
+            return ans/2.0;
+        } else {
+            if (max_size > min_size)
+                return max_heap.top();
+            else
+                return min_heap.top();
+        }
+    }
+public:
+    vector<double> medianSlidingWindow(vector<int>& nums, int k) {
+        vector<double> ans;
+        multiset<int> myset;
+        int length = nums.size();
+        for (int i =0;i<k;i++){
+            addNum(nums[i]);
+            //myset.insert(nums[i]);
+        }
+        ans.push_back(findMedian());
+        int max_size = max_heap.size();
+        int min_size = min_heap.size();
+        bool pick_max = false, pick_min = false;
+        if (max_size > min_size)
+            pick_max = true;
+        else if (max_size < min_size)
+            pick_min = true;
+        else
+            pick_max = pick_min = true;
+        for (int i =k;i<length; i++) {
+            myset.insert(nums[i-k]);
+            if (max_heap.top() >= nums[i-k]) {
+                if (max_heap.top() >= nums[i]){
+                    max_heap.push(nums[i]);
+                } else {
+                    min_heap.push(nums[i]);
+                    max_heap.push(min_heap.top());
+                    min_heap.pop();
+                }
+            } else {
+                if (min_heap.top() <= nums[i]) {
+                    min_heap.push(nums[i]);
+                } else {
+                    max_heap.push(nums[i]);
+                    min_heap.push(max_heap.top());
+                    max_heap.pop();
+                }
+            }
+            while(max_heap.size() > 0 && myset.find(max_heap.top()) != myset.end()) {
+                int t = max_heap.top();
+                max_heap.pop();
+                myset.erase(t);
+            }
+            while(min_heap.size() > 0 && myset.find(min_heap.top()) != myset.end()) {
+                int t = min_heap.top();
+                min_heap.pop();
+                myset.erase(t);
+            }
+            if (pick_max && pick_min){
+                double temp = double(max_heap.top()) + double(min_heap.top());
+                ans.push_back(temp/2.0);
+            } else if (pick_max)
+                ans.push_back(max_heap.top());
+            else
+                ans.push_back(min_heap.top());
+        }
+        return ans;
+    }
+};

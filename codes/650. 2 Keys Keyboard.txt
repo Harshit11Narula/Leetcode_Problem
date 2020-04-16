@@ -1,0 +1,17 @@
+class Solution {
+public:
+    int dp[2000] = {0};
+    int minSteps(int n) {
+        for(int j=2;j<=n;j++){
+            dp[j] = j;
+        }
+        for(int j=2;j<=n;j++){
+            int val = dp[j];
+            for(int i=2*j;i<=n;i+=j){
+                dp[i] = min(dp[i] , val+i/j);
+            }
+        }
+        return dp[n];
+        
+    }
+};

@@ -1,0 +1,15 @@
+class Solution {
+public:
+    int maxValueAfterReverse(vector<int>& arr) {
+        int sum = 0;
+        int maxval = INT_MIN , minval = INT_MAX;
+        for(int j=0;j<arr.size()-1;j++) sum+= abs(arr[j+1] - arr[j]) , maxval = max(maxval , min(arr[j] , arr[j+1])) , minval = min(minval , 
+            max(arr[j] , arr[j+1]));
+        int c = max(0 , (maxval - minval)*2);
+        for(int j=0;j<arr.size()-1;j++){
+            c = max(c , -abs(arr[j] - arr[j+1]) + abs(arr[0]- arr[j+1]));
+            c = max(c , -abs(arr[j] - arr[j+1]) + abs(arr[arr.size()-1]- arr[j]));
+        }
+        return sum + c;
+    }
+};

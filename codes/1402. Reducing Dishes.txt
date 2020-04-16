@@ -1,0 +1,18 @@
+class Solution {
+public:
+    int maxSatisfaction(vector<int>& arr) {
+        int n = arr.size();
+        sort(arr.begin() , arr.end());
+        int ans = 0;
+        int sum = 0;
+        int prefix = 0;
+        for(int j=n-1;j>=0;j--){
+           sum+=prefix;
+           sum+=arr[j];
+            prefix+=arr[j];
+            ans = max(ans , sum);
+        }
+       return ans;
+        
+    }
+};
